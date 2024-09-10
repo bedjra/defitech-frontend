@@ -1,0 +1,105 @@
+/* Applique ces styles à la section principale */
+header {
+    width: 100%;
+    background-color: #0073e6;
+    padding: 7px;
+    text-align: center;
+    color: white;     
+  }
+  
+  .filled {
+    border: 2px solid blue;
+  }
+  
+  .divider {
+    position: relative;
+  }
+  .divider .border-bottom {
+    border-color: #000 !important;  /* Assurez-vous que la couleur de la bordure est noire */
+    border-width: 1px !important;   /* Assurez-vous que la bordure est de la bonne épaisseur */
+  }
+  .divider h2 {
+    background-color: #fff;
+    padding: 0 10px;
+  }
+  .divider h3 {
+    background-color: #fff;
+    padding: 0 10px;
+  }
+  
+  
+  /* Style du titre du formulaire */
+  .title {
+    font-size: 24px; /* Taille de la police */
+    font-weight: 500; /* Épaisseur de la police */
+    text-align: center; /* Centre le texte */
+    margin-bottom: 10px; /* Espace sous le titre */
+  }
+  
+  /* Conteneur pour les détails utilisateur */
+  .user-details {
+    display: grid; /* Utilise le CSS Grid */
+    grid-template-columns: 1fr 1fr; /* Deux colonnes de largeur égale */
+    gap: 15px; /* Espacement de 20px entre les éléments */
+    margin-bottom: 20px; /* Espace sous les détails utilisateur */
+  }
+  
+  .user-detail {
+    display: grid; /* Utilise le CSS Grid */
+    grid-template-columns: 1fr 1fr; /* Deux colonnes de largeur égale */
+    gap: 15px; /* Espacement de 20px entre les éléments */
+    margin-bottom: 20px; /* Espace sous les détails utilisateur */
+  }
+
+  /* Style de chaque boîte de saisie */
+  .input-box {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Boîte de saisie pleine largeur */
+  .full-width {
+    grid-column: span 2; /* Prend toute la largeur (2 colonnes) */
+  }
+  
+  /* Style des labels des champs de saisie */
+  .input-box .details {
+    display: block; /* Affiche le label comme un bloc */
+    font-weight: 500; /* Épaisseur de la police */
+    margin-bottom: 0px; /* Espace sous le label */
+  }
+  
+  /* Style des champs de saisie et des sélecteurs */
+  .input-box input,
+  .input-box select {
+    width: 100%; /* Champ prend toute la largeur de son conteneur */
+    padding: 8px; /* Espace intérieur autour du texte */
+    box-sizing: border-box; /* Inclut padding et border dans la largeur totale */
+    border: 1px solid #ccc; /* Bordure grise claire */
+    border-radius: 5px; /* Coins arrondis */
+    outline: none; /* Supprime le contour par défaut au focus */
+    font-size: 18 px; /* Taille de la police */
+  }
+  
+  .button-inscrire {
+    margin-left: 1000px;
+    margin-bottom: 50px;
+    width: 100px; /* Définir la largeur du bouton */
+    height: 30px; /* Définir la hauteur du bouton */
+    border-radius: 25px; /* Utiliser la moitié de la hauteur pour obtenir un effet de cylindre */
+    background-color: #0073e6; /* Couleur de fond du bouton */
+    color: white; /* Couleur du texte du bouton */
+    text-align: center; /* Centrer le texte horizontalement */
+    line-height: 20px; /* Centrer le texte verticalement */
+    font-size: 16px; /* Taille du texte */
+    border: none; /* Supprimer la bordure du bouton */
+    cursor: pointer; /* Changer le curseur lorsque survolé */
+    position: relative; /* Position relative pour permettre le pseudo-élément */
+  }
+  
+  
+  
+  
+  
+  
+  
+  

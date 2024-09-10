@@ -1,0 +1,178 @@
+<section class="home-section">
+    <div class="home-content">
+        <div class="containeur">
+            <form id="studentForm" action="#">
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Matricule</span>
+
+                        <input type="text" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Nom</span>
+                        <input type="text" id="lastname" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Prénoms</span>
+                        <input type="text" id="firstname" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Date de naissance</span>
+                        <input type="date" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Lieu de naissance</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Nationalité</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div>
+                        <label for="phone">Sexe</label><br>
+                        <select id="genre" name="genre" required style="width: 580px; height: 40px;">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="masculin">Masculin</option>
+                            <option value="feminin">Féminin</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Baccalauréat (Série)</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Autres diplômes</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Année d'obtention du bac</span>
+                        <input type="text" placeholder="YYYY" pattern="\d{4}" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Pays d'obtention du bac</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Etablissement de provenance</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Mention au baccalauréat</span>
+                        <select name="mention" required style="width: 580px; height: 40px;">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="passable">Passable</option>
+                            <option value="assez-bien">Assez-Bien</option>
+                            <option value="bien">Bien</option>
+                            <option value="tres-bien">Très-Bien</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Date d'inscription</span>
+                        <input type="date" required style="height: 45px;">
+                    </div>
+                </div>
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">INFORMATION DU TUTEUR OU PARENT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-detail">
+                    <div class="input-box">
+                        <span class="details">Nom</span>
+                        <input type="text" id="parentLastname" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Prénoms</span>
+                        <input type="text" id="parentFirstname" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Profession</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Organisme Employeur</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Adresse</span>
+                        <input type="text" required pattern="^[a-zA-Zàéèç]{1,25}$">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">E-mail</span>
+                        <input type="text" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone de bureau</span>
+                        <input type="tel" minlength="11" maxlength="11" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone de domicile</span>
+                        <input type="tel" minlength="11" maxlength="11" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Cel</span>
+                        <input type="tel" minlength="11" maxlength="11" required>
+                    </div>
+                </div>
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">FILIERE ET MODALITES DE PAIEMENT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-detail">
+                    <div>
+                        <label for="filiere">Choix de Filiere</label><br>
+                        <select id="filiere" name="filiere" required style="width: 580px; height: 40px;">
+                            <option value="" disabled selected>Choisir...</option>
+                            <optgroup label="FILIERES TECHNOLOGIES">
+                                <option value="genie-logiciel">Génie Logiciel</option>
+                                <option value="systeme-reseau">Système et Réseau</option>
+                            </optgroup>
+                            <optgroup label="FILIERES TERTIAIRES">
+                                <option value="comptabilite-finances">Comptabilité, Finances</option>
+                                <option value="gestion-commerciale">Gestion commerciale et Marketing</option>
+                                <option value="management-rh">Management des Ressources Humaines</option>
+                                <option value="communication-organisations">Communication des Organisations</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="paiement">Modalités de paiement</label><br>
+                        <select id="paiement" name="paiement" required style="width: 580px; height: 40px;">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="comptant">Comptant</option>
+                            <option value="3-tranches">3 Tranches</option>
+                            <option value="7-tranches">7 Tranches</option>
+                            <option value="autres">Autres</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Choix de parcours</span>
+                        <select id="parcours" name="parcours" required style="width: 580px; height: 40px;">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="licence-jour">LICENCE DU JOUR</option>
+                            <option value="bts">BTS</option>
+                            <option value="licence-soir">LICENCE DU SOIR</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="inscription">Inscription en</label><br>
+                        <select id="inscription" name="inscription" required style="width: 580px; height: 40px;">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="1ere-annee">1ère Année</option>
+                            <option value="2eme-annee">2ème Année</option>
+                            <option value="3eme-annee">3ème Année</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="button">
+                    <button type="submit" class="button-inscrire">VALIDER</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

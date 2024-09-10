@@ -1,0 +1,108 @@
+<div class="container-fluid" >
+  <div class="row align-items-center"
+  style="background-color: #fff; height: 55px;">    <div class="col d-flex justify-content-between align-items-center">
+      <h1 class="mb-0"><strong>Licence du Jour </strong></h1>
+      <div class="comp d-flex align-items-center">
+        <span class="mr-2">COMPTABLE : &nbsp; &nbsp;</span>
+        <a href="javascript:void(0);" [routerLink]="['/profil']">
+          <i class="fas fa-user"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="home-section">
+    <div class="home-content">
+      <div class="overview-boxes">
+        <div class="box">
+          <div class="image" width="10px">
+            <img [routerLink]="['/licence1']" src="assets/licence/l1.png" alt="Licence 1">
+          </div>
+        </div>
+        <div class="box">
+          <div class="image">
+            <img [routerLink]="['/licence2']" src="assets/licence/l2.png"alt="Licence 2">
+          </div>
+        </div>
+        <div class="box">
+          <div class="image">
+            <img [routerLink]="['/licence3']" src="assets/licence/l3.png"alt="Licence3">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+<pre></pre>
+<pre></pre>
+<pre></pre>
+<pre></pre>
+<pre></pre>
+<section class="home-section">
+  <div class="home-content">
+    <div class="sales-boxes position-relative">
+      <!-- Background container -->
+      <div class="recent-sales box">
+        <pre></pre>
+        <div class="sales-details">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Niveau</th>
+                    <th>Filiere</th>
+                    <th>Effectif total</th>
+                    <th>Filles</th>
+                    <th>Garcons</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+      
+              <tr>
+                <td>Licence1</td>
+                <td>GL</td>
+                <td>02</td>
+                <td>01</td>
+                <td>01</td>
+              </tr>
+              <tr>
+                <td>Licence1</td>
+                <td>SR</td>
+                <td>02</td>
+                <td>01</td>
+                <td>01</td>
+              </tr>
+              <tr>
+                <td>Licence2</td>
+                <td>GL</td>
+                <td>02</td>
+                <td>01</td>
+                <td>01</td>
+              </tr>
+            </tbody>
+            
+          </table>
+        </div>
+      </div>
+    
+
+    
+      <!-- Superimposed container -->
+      <div class="container bg-primary text-white p-3 rounded position-absolute superimposed-container">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-12 col-md-auto">
+            <span class="h4">STATISTIQUES DES ETUDIANTS DE LICENCE DU JOUR</span>
+          </div>
+          <div class="col-12 col-md-auto mt-3 mt-md-0">
+            <button class="btn btn-light newUser" [routerLink]="['/inscrire étudiant']" style="color: black;">
+              <i class="fas fa-plus"></i> &nbsp; Ajouter Etudiant
+            </button>
+          </div>
+        </div>
+      </div>
+    
+      
+      
+    </div>
+  </div>
+</section>

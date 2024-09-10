@@ -1,12 +1,21 @@
 import { Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+import { TestComponent } from './test/test.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [
+    RouterOutlet,
+    ReactiveFormsModule,
+    HttpClientModule,
+    TestComponent
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'] // Correction ici (ajout du 's')
 })
 export class AppComponent {
   title = 'DefiFrontend';

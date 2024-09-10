@@ -1,0 +1,70 @@
+<div class="container-fluid" >
+    <div class="row align-items-center"
+    style="background-color: #fff; height: 55px;">    <div class="col d-flex justify-content-between align-items-center">
+        <h1 class="mb-0"><strong>Rappel</strong></h1>
+        <div class="comp d-flex align-items-center">
+          <button class="print-button" aria-label="Imprimer">
+            <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
+          </button>
+          &nbsp; &nbsp;&nbsp; &nbsp;
+          <span class="mr-2">COMPTABLE : &nbsp; &nbsp;</span>
+          <a href="javascript:void(0);" [routerLink]="['/profil']">
+            <i class="fas fa-user"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+</div>
+
+<pre></pre>
+<pre></pre>
+<pre></pre>
+<pre></pre>
+<section class="home-section">
+  <div class="home-content">
+    <div class="sales-boxes position-relative">
+      <!-- Background container -->
+      <div class="recent-sales box">
+        <pre></pre>
+        <div class="sales-details">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matricule</th>
+                <th>Etudiant</th>
+                <th>Montant</th>
+                <th>Date Échéance</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let echeance of echeances">
+                <td>{{ echeance.student.matricule }} </td>
+                <td>{{ echeance.student.nom }} {{ echeance.student.prenom }}</td>
+                <td>{{ echeance.montantParEcheance }} FCFA</td>
+                <td>{{ echeance.dateEcheance | date:'dd/MM/yyyy' }}</td>
+                <td>{{ echeance.statut }}</td>
+              </tr>
+            </tbody>
+            
+          </table>
+        </div>
+      </div>
+    
+
+    
+      <!-- Superimposed container -->
+      <div class="container bg-primary text-white p-3 rounded position-absolute superimposed-container">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-12 col-md-auto">
+            <span class="h4">LISTES DES RAPPELS A VENIR </span>
+          </div>
+      
+        </div>
+      </div>
+    
+      
+      
+    </div>
+  </div>
+</section>
