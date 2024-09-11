@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Student } from '../../../../MODELS/student';
-import { DataService } from '../../../../SERVICES/data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { StudentService } from '../../../../SERVICES/student.service';
+import { Parcours } from '../../../../MODELS/parcours';
+import { Filiere } from '../../../../MODELS/filiers';
+import { FiliersService } from '../../../../SERVICES/filiers.service';
+import { ParcourService } from '../../../../SERVICES/parcour.service';
 
 @Component({
   selector: 'app-add',
@@ -16,13 +20,16 @@ import { RouterLink } from '@angular/router';
 })
 export class AddComponent implements OnInit {
 
-   parcoursList: string[] = []; 
-   filiereList: string[] = []; 
- 
+  parcoursList: Parcours[] = []; 
+  filiereList: Filiere[] = []; 
+  selectedParcoursId?: number;
+   
   student: Student = {
     etudiantMatricule: '',
     etudiantNom: '',
     etudiantPrenom: '',
+    etudiantAdresse: '',
+    etudiantTelephone: '',
     etudiantEmail: '',
     etudiantDateNaissance: new Date(),
     etudiantLieuNaissance: '',
@@ -52,21 +59,53 @@ export class AddComponent implements OnInit {
     modalitesPaiement: ''
   };
 
-  constructor(private dataService: DataService) { }
+  constructor(
+    private filiersService: FiliersService,
+    private parcourService: ParcourService,
+    private studentService: StudentService, 
+    private route: ActivatedRoute  ) {}
 
-  ngOnInit(): void {
-   this.dataService.getParcours().subscribe(data => {
-      this.parcoursList = data;
-    });
+    ngOnInit(): void {
+      // Obtenir la liste des parcours au chargement du composant
+      this.parcourService.getAllParcours().subscribe(data => {
+        this.parcoursList = data;
+      }, error => {
+        console.error('Erreur lors de la récupération des parcours', error);
+      });
+    }
+  
+    onParcoursChange(event: Event): void {
+      const selectElement = event.target as HTMLSelectElement;
+      this.selectedParcoursId = +selectElement.value; // Convertir en nombre
+      if (this.selectedParcoursId) {
+        this.filiersService.getFilieresByParcours(this.selectedParcoursId).subscribe(data => {
+          this.filiereList = data;
+        }, error => {
+          console.error('Erreur lors de la récupération des filières', error);
+        });
+      }
+    }
+  
 
-    this.dataService.getFilieres().subscribe(data => {
-      this.filiereList = data;
-    });
+  onSubmit(): void {
+    if (this.isValid()) {
+      this.studentService.saveEtudiant(this.student).subscribe(
+        response => {
+          console.log('Étudiant enregistré avec succès!', response);
+          // Redirigez ou réinitialisez le formulaire si nécessaire
+        },
+        error => {
+          console.error('Erreur lors de l\'enregistrement de l\'étudiant', error);
+        }
+      );
+    } else {
+      console.error('Le formulaire n\'est pas valide.');
+    }
   }
 
-  onSubmit() {
-    console.log(this.student);
-    // Traitement du formulaire
+  isValid(): boolean {
+    // Ajoutez la logique de validation si nécessaire
+    return true;
   }
-
+  
 }

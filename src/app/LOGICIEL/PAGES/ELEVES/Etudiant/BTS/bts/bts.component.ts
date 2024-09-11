@@ -9,5 +9,6 @@ import { RouterLink } from '@angular/router';
   styleUrl: './bts.component.css'
 })
 export class BtsComponent {
+  
 
 }

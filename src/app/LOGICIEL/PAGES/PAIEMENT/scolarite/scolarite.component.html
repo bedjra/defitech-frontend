@@ -32,26 +32,24 @@
       <div class="col">
         <div class="d-flex align-items-center search-field">
           <label for="nom" class="me-2">Filiere:</label>
-          <select matNativeControl required>
-            <option value="" disabled selected>Choisir...</option>
-            <option value="volvo">Genie Logiciel</option>
-            <option value="saab">Système Réseau</option>
-            <option value="mercedes">Comptabilité</option>
-            <option value="audi">Audit</option>
+          <select [(ngModel)]="student.filiere" name="filiere" required>
+            <option value="" disabled selected>Choisir une filière...</option>
+            <option *ngFor="let filiere of filiereList" [value]="filiere">{{ filiere }}</option>
           </select>
         </div>
       </div>
-      <div class="col" >
+      <div class="col">
         <div class="d-flex align-items-center search-field">
           <label for="prenom" class="me-2">Niveau :</label>
-          <select matNativeControl required  style="width: 100px;">
+          <select [(ngModel)]="student.niveau" name="niveau" required>
             <option value="" disabled selected>Choisir...</option>
-            <option value="volvo">1</option>
-            <option value="saab">2</option>
-            <option value="mercedes">3</option>
+            <option value="PREMIERE_ANNEE">Première Année</option>
+            <option value="DEUXIEME_ANNEE">Deuxième Année</option>
+            <option value="TROISIEME_ANNEE">Troisième Année</option>
           </select>
         </div>
       </div>
+      <!------
       <div class="col" >
         <div class="d-flex align-items-center search-field">
           <label for="prenom" class="me-2">Statut :</label>
@@ -63,13 +61,13 @@
         </div>
       </div>
 
-
+---->
 
       <div class="col-auto">
         <button class="btn btn-primary">CHERCHER</button>
       </div>
       <div class="col-auto ms-2"> <!-- Ajoute une marge à gauche du bouton d'impression -->
-        <button (click) = "printEtudiant()" class="print-button" aria-label="Imprimer">
+        <button (click)="printEtudiant()" class="print-button" aria-label="Imprimer">
           <i class="fas fa-print"></i> <!-- Icône d'impression Font Awesome -->
         </button>
       </div>
@@ -120,6 +118,13 @@
           <div class="col-12 col-md-auto">
             <span class="h4">LISTES DES PAIEMENTS</span>
           </div>
+
+          <div class="col-12 col-md-auto mt-3 mt-md-0">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#renvoiFormModal" style="color: black;">
+              <i class="fas fa-coins"> &nbsp;LISTE DES RENVOIS</i>
+            </button>
+          </div>
+
           <div class="col-12 col-md-auto mt-3 mt-md-0">
             <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#userForm"
               style="color: black;">
@@ -142,20 +147,38 @@
             <div class="modal-body">
 
               <form action="#" id="myForm">
-
+<!----
                 <div class=" imgholder">
-                  <img src="assets/logo.png" height="100px" width="200px" >
+                  <img src="assets/logo.png" height="100px" width="200px">
                 </div>
 
                 <div class="inputField">
-                  <div>
-                    <label for="name">Nom:</label>
-                    <input type="text" [(ngModel)]="student.etudiantNom" name="etudiantNom" required>
+                  <div class="form-group">
+                    <label for="studentName">Nom de l'étudiant :</label>
+                    <input type="text" id="studentName" [(ngModel)]="searchName" (input)="filterNames()"
+                      class="form-control" placeholder="Saisir le nom de l'étudiant" (focus)="showNameDropdown = true"
+                      (blur)="hideDropdown('name')">
+                    <ul *ngIf="showNameDropdown" class="list-group">
+                      <li *ngFor="let student of filteredNames" (click)="selectName(student)"
+                        class="list-group-item list-group-item-action">
+                        {{ student.etudiantNom }}
+                      </li>
+                    </ul>
                   </div>
-                  <div>
-                    <label for="name">Prénom:</label>
-                    <input type="text" [(ngModel)]="student.etudiantPrenom" name="etudiantPrenom" required>
+
+                  <div class="form-group">
+                    <label for="studentFirstName">Prénom de l'étudiant :</label>
+                    <input type="text" id="studentFirstName" [(ngModel)]="searchFirstName" (input)="filterFirstNames()"
+                      class="form-control" placeholder="Saisir le prénom de l'étudiant"
+                      (focus)="showFirstNameDropdown = true" (blur)="hideDropdown('firstName')">
+                    <ul *ngIf="showFirstNameDropdown" class="list-group">
+                      <li *ngFor="let student of filteredFirstNames" (click)="selectFirstName(student)"
+                        class="list-group-item list-group-item-action">
+                        {{ student.etudiantPrenom }}
+                      </li>
+                    </ul>
                   </div>
+
                   <div>
                     <label for="name">Montant:</label>
                     <input type="text" [(ngModel)]="paiement.montantActuel" name="montantActuel" required>
@@ -166,7 +189,7 @@
                     <input type="date" [(ngModel)]="paiement.datePaiement" name="datePaiment" required>
                   </div>
                 </div>
-
+--->
               </form>
             </div>
 
@@ -178,116 +201,56 @@
         </div>
       </div>
 
+      <div class="modal fade" id="renvoiFormModal" tabindex="-1" aria-labelledby="renvoiFormLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+      
+            <div class="modal-header">
+              <h1 class="modal-title" id="renvoiFormLabel">Fiche de Renvoi</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+      
+            <div class="modal-body">
+              <!-- Contenu de la fiche imprimable -->
+              <div class="printable-section">
+                <h2>Fiche de Renvoi</h2>
+                <p>Date : {{ today | date:'dd/MM/yyyy' }}</p>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Matricule</th>
+                      <th>Nom</th>
+                      <th>Prénoms</th>
+                      <th>Parcours</th>
+                      <th>Montant Final</th>
+                      <th>Reste</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let paiement of filteredPaiements">
+                      <td>{{ paiement.matricule }}</td>
+                      <td>{{ paiement.nom }}</td>
+                      <td>{{ paiement.prenom }}</td>
+                      <td>{{ paiement.parcours }}</td>
+                      <td>{{ paiement.montantFinal }} FCFA</td>
+                      <td>{{ paiement.reste }} FCFA</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+      
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              <button type="button" class="btn btn-primary" (click)="printFiche()">Imprimer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      
 
     </div>
   </div>
 </section>
-
-<!-----
-<section class="home-section">
-  <div class="home-content">
-    <div class="overview-boxes">
-
-      <div class="box">
-        <div class="image" width="10px">
-          <img [routerLink]="['/Scolarite licence du jour']" src="assets/parcours/ldj.png" alt="Licence 1"
-            width="400px">
-        </div>
-      </div>
-
-
-      <div class="box">
-        <div class="image">
-          <img [routerLink]="['/Scolarite BTS']" src="assets/parcours/bts.png" alt="bts">
-        </div>
-      </div>
-
-      <div class="box">
-        <div class="image">
-          <img [routerLink]="['/Scolarite licence du soir']" src="assets/parcours/lds.png" alt="Licence du soir">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="hom-section">
-  <div class="sale-boxes">
-    <div class="recents-sales box">
-      <div class="heade">
-        <span>STATISTIQUES DES PAIEMENTS DE SCOLARITÉ</span>
-        <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#userForm" style="color: black;">
-          <i class="fas fa-plus"> &nbsp; Ajouter Scolarite</i>
-        </button>
-      </div>
-      <div class="sale-details">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Parcours</th>
-              <th>Effectif total</th>
-              <th>Etudiant en regle</th>
-              <th>Etudiant avec des impayés</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-  </div>
-
-
-  --Modal Form--
-  <div class="modal fade" id="userForm">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h1 class="modal-title">
-            Formulaire de paiement de Scolarité
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-
-          <form action="#" id="myForm">
-
-            <div class=" imgholder">
-              <img src="assets/def.png" height="100px" width="200px" style="background-color: black;">
-            </div>
-
-            <div class="inputField">
-              <div>
-                <label for="name">Nom:</label>
-                <input type="text" name="" id="nom" required>
-              </div>
-              <div>
-                <label for="name">Prénom:</label>
-                <input type="text" name="" id="prenom" required>
-              </div>
-              <div>
-                <label for="name">Montant:</label>
-                <input type="number" name="" id="montant" required>
-              </div>
-
-              <div class="input-box">
-                <label for="date">Date de paiement</label><br>
-                <input type="date" id="date" formControlName="datePaiement" required><br><br>
-              </div>
-            </div>
-
-          </form>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="myForm" class="btn btn-primary submit">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  -- Option 1: Bootstrap Bundle with Popper --
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-    --->

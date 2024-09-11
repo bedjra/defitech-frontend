@@ -13,14 +13,12 @@ import { PrincipaleComponent } from './LOGICIEL/PAGES/principale/principale.comp
 import { ParametreComponent } from './LOGICIEL/PAGES/parametre/parametre.component';
 import { RappelComponent } from './LOGICIEL/PAGES/rappel/rappel.component';
 import { ParcourComponent } from './LOGICIEL/PAGES/ELEVES/parcour/parcour.component';
-import { AjouterComponent } from './LOGICIEL/PAGES/ELEVES/Etudiant/ajouter/ajouter.component';
 import { AddComponent } from './LOGICIEL/PAGES/ELEVES/Etudiant/add/add.component';
 
 
 
 
 export const routes: Routes = [
-
 
   {
     path: '',
@@ -40,6 +38,7 @@ export const routes: Routes = [
       { path: 'scolarite', component: ScolariteComponent },
       { path: 'profil', component: ParametreComponent },
       { path: 'rappel', component: RappelComponent },
+
     ]
   },
 

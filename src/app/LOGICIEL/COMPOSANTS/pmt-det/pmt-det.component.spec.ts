@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ParcoursComponent } from './parcours.component';
+import { PmtDetComponent } from './pmt-det.component';
 
-describe('ParcoursComponent', () => {
-  let component: ParcoursComponent;
-  let fixture: ComponentFixture<ParcoursComponent>;
+describe('PmtDetComponent', () => {
+  let component: PmtDetComponent;
+  let fixture: ComponentFixture<PmtDetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ParcoursComponent]
+      imports: [PmtDetComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ParcoursComponent);
+    fixture = TestBed.createComponent(PmtDetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -3,6 +3,8 @@ export interface Student {
     etudiantMatricule: string,
     etudiantNom: string;
     etudiantPrenom: string;
+    etudiantAdresse: string;
+    etudiantTelephone: string;
     etudiantEmail: string;
     etudiantDateNaissance: Date; 
     etudiantLieuNaissance: string;

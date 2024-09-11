@@ -41,6 +41,14 @@
                         <input type="text" [(ngModel)]="student.etudiantPrenom" name="etudiantPrenom" required>
                     </div>
                     <div class="input-box">
+                        <span class="details">Adresse</span>
+                        <input type="text" [(ngModel)]="student.etudiantAdresse" name="etudiantAdresse" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Telephone</span>
+                        <input type="email" [(ngModel)]="student.etudiantTelephone" name="etudiantTelephone" required>
+                    </div>
+                    <div class="input-box">
                         <span class="details">E-mail</span>
                         <input type="email" [(ngModel)]="student.etudiantEmail" name="etudiantEmail" required>
                     </div>
@@ -111,6 +119,7 @@
                         <input type="date" [(ngModel)]="student.etudiantDateInscription" name="etudiantDateInscription"
                             required>
                     </div>
+
                 </div>
 
                 <div class="container my-4">
@@ -167,23 +176,22 @@
                     </div>
                 </div>
                 <div class="user-details">
-                    
+
                     <div class="input-box">
-                        <span class="details">Parcours</span>
-                        <select [(ngModel)]="student.parcours" name="parcours" required>
-                            <option value="" disabled selected>Choisir un parcours...</option>
-                            <option *ngFor="let parcours of parcoursList" [value]="parcours">{{ parcours }}</option>
+                        <label for="parcoursSelect">Sélectionner le parcours:</label>
+                        <select id="parcoursSelect" (change)="onParcoursChange($event)">
+                            <option *ngFor="let parcours of parcoursList" [value]="parcours.id">{{ parcours.nom }}
+                            </option>
                         </select>
                     </div>
-                    
+
                     <div class="input-box">
-                        <span class="details">Filière</span>
-                        <select [(ngModel)]="student.filiere" name="filiere" required>
-                            <option value="" disabled selected>Choisir une filière...</option>
-                            <option *ngFor="let filiere of filiereList" [value]="filiere">{{ filiere }}</option>
+                        <label for="filiereSelect">Filières disponibles:</label>
+                        <select id="filiereSelect">
+                            <option *ngFor="let filiere of filiereList" [value]="filiere.id">{{ filiere.nom }}</option>
                         </select>
                     </div>
-                    
+
                     <div class="input-box">
                         <span class="details">Niveau</span>
                         <select [(ngModel)]="student.niveau" name="niveau" required>
@@ -193,7 +201,7 @@
                             <option value="TROISIEME_ANNEE">Troisième Année</option>
                         </select>
                     </div>
-                    
+
                     <div class="input-box">
                         <span class="details">Boursier</span>
                         <select [(ngModel)]="student.boursier" name="boursier" required>

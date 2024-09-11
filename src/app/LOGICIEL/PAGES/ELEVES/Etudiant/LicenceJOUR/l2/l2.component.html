@@ -84,9 +84,18 @@
               <td>{{ student.filiere }}</td>
               <td>{{ student.modalitesPaiement }}</td>
               <td>
-                <button type="button" class="btn btn-right"><i class="fas fa-pencil-alt"></i></button>
-                <button type="button" class="btn btn-right"><i class="fas fa-trash-alt"></i></button>
-                <button type="button" class="btn btn-right"><i class="fas fa-list-alt"></i></button>
+                <!-- Bouton pour afficher les détails -->
+                <button (click)="showDetails(student)" type="button" class="btn btn-right">
+                  <i class="fas fa-list-alt"></i>
+                </button>
+                <!-- Bouton pour éditer -->
+                <button (click)="editStudent(student)" type="button" class="btn btn-right">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <!-- Bouton pour supprimer -->
+                <button (click)="deleteStudent(student.etudiantMatricule)" type="button" class="btn btn-danger">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
               </td>
             </tr>
           </tbody>
@@ -99,10 +108,10 @@
     <div class="container bg-primary text-white p-3 rounded position-absolute superimposed-container">
       <div class="row justify-content-between align-items-center">
         <div class="col-12 col-md-auto">
-          <span class="h4">LISTES DES ETUDIANTS DE LICENCE 2</span>
+          <span class="h4">LISTES DES ETUDIANTS DE LICENCE 2 </span>
         </div>
         <div class="col-12 col-md-auto mt-3 mt-md-0">
-          <button class="btn btn-light newUser" [routerLink]="['/licence du jour']" style="color: black;">
+          <button class="btn btn-light newUser" [routerLink]="['/parcours']" style="color: black;">
             <i class="fas fa-arrow-left"></i>&nbsp; retour
           </button>
         </div>
@@ -114,3 +123,49 @@
   </div>
 </div>
 </section>
+
+
+
+
+
+<!-- Modal pour afficher les détails -->
+<div id="detailsModal" class="modal">
+  <div class="modal-content">
+    <span (click)="closeModal()" class="close">&times;</span>
+    <h2>Détails de l'étudiant</h2>
+    <div *ngIf="selectedStudent">
+      <p><strong>Matricule :</strong> {{ selectedStudent.etudiantMatricule }}</p>
+      <p><strong>Nom :</strong> {{ selectedStudent.etudiantNom }}</p>
+      <p><strong>Prénom :</strong> {{ selectedStudent.etudiantPrenom }}</p>
+      <p><strong>Email :</strong> {{ selectedStudent.etudiantEmail }}</p>
+      <p><strong>Adresse :</strong> {{ selectedStudent.etudiantAdresse }}</p>
+      <p><strong>Téléphone :</strong> {{ selectedStudent.etudiantTelephone }}</p>
+      <p><strong>Date de Naissance :</strong> {{ selectedStudent.etudiantDateNaissance | date }}</p>
+      <p><strong>Lieu de Naissance :</strong> {{ selectedStudent.etudiantLieuNaissance }}</p>
+      <p><strong>Nationalité :</strong> {{ selectedStudent.etudiantNationalite }}</p>
+      <p><strong>Sexe :</strong> {{ selectedStudent.etudiantSexe }}</p>
+      <p><strong>Série du Bac :</strong> {{ selectedStudent.etudiantSerieBac }}</p>
+      <p><strong>Mention Bac :</strong> {{ selectedStudent.etudiantMentionBac }}</p>
+      <p><strong>Autres Diplômes :</strong> {{ selectedStudent.etudiantAutresDiplomes }}</p>
+      <p><strong>Année du Bac :</strong> {{ selectedStudent.etudiantAnneeBac }}</p>
+      <p><strong>Pays du Bac :</strong> {{ selectedStudent.etudiantPaysBac }}</p>
+      <p><strong>Établissement Provenance :</strong> {{ selectedStudent.etudiantEtablissementProvenance }}</p>
+      <p><strong>Date d'Inscription :</strong> {{ selectedStudent.etudiantDateInscription | date }}</p>
+      <p><strong>Nom du Tuteur :</strong> {{ selectedStudent.tuteurNom }}</p>
+      <p><strong>Prénom du Tuteur :</strong> {{ selectedStudent.tuteurPrenom }}</p>
+      <p><strong>Profession du Tuteur :</strong> {{ selectedStudent.tuteurProfession }}</p>
+      <p><strong>Organisme du Tuteur :</strong> {{ selectedStudent.tuteurOrganisme }}</p>
+      <p><strong>Adresse du Tuteur :</strong> {{ selectedStudent.tuteurAdresse }}</p>
+      <p><strong>Email du Tuteur :</strong> {{ selectedStudent.tuteurEmail }}</p>
+      <p><strong>Téléphone Bureau du Tuteur :</strong> {{ selectedStudent.tuteurTelBureau }}</p>
+      <p><strong>Téléphone Domicile du Tuteur :</strong> {{ selectedStudent.tuteurTelDomicile }}</p>
+      <p><strong>Cellulaire du Tuteur :</strong> {{ selectedStudent.tuteurCel }}</p>
+      <p><strong>Parcours :</strong> {{ selectedStudent.parcours }}</p>
+      <p><strong>Filière :</strong> {{ selectedStudent.filiere }}</p>
+      <p><strong>Niveau :</strong> {{ selectedStudent.niveau }}</p>
+      <p><strong>Boursier :</strong> {{ selectedStudent.boursier }}</p>
+      <p><strong>Montant Final :</strong> {{ selectedStudent.montantFinal }}</p>
+      <p><strong>Modalités de Paiement :</strong> {{ selectedStudent.modalitesPaiement }}</p>
+    </div>
+  </div>
+</div>

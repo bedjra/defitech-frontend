@@ -86,3 +86,11 @@
     padding: 30px; /* Ajoute 10px de padding à l'intérieur de chaque cellule */
   }
   
+  .clickable-image {
+    cursor: pointer;
+    transition: opacity 0.1s ease; /* Animation douce */
+  }
+  
+  .clickable-image:hover {
+    opacity: 0.1; /* Change l'opacité à 70% au survol */
+  }

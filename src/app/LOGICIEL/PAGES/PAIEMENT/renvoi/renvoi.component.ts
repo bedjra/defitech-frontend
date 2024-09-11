@@ -1,19 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Paiement } from '../../../MODELS/paiement';
 import { CommonModule } from '@angular/common';
 import { PaiementService } from '../../../SERVICES/paiement.service';
-import { Paiement } from '../../../MODELS/paiement';
-import { Student } from '../../../MODELS/student';
-import { FormsModule } from '@angular/forms';
-
+import bootstrap from '../../../../../main.server';
 @Component({
-  selector: 'app-scolarite',
+  selector: 'app-renvoi',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule],
-  templateUrl: './scolarite.component.html',
-  styleUrl: './scolarite.component.css'
+  imports: [CommonModule],
+  templateUrl: './renvoi.component.html',
+  styleUrl: './renvoi.component.css'
 })
-export class ScolariteComponent implements OnInit {
+export class RenvoiComponent implements OnInit {
   parcoursList: string[] = [];
   filiereList: string[] = [];
   filteredPaiements: any[] = [];
@@ -60,5 +58,6 @@ export class ScolariteComponent implements OnInit {
   printFiche(): void {
     window.print();
   }
+
 }
 
