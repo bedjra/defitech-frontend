@@ -37,16 +37,17 @@
                 <th>Statut</th>
               </tr>
             </thead>
+            <!-----
             <tbody>
               <tr *ngFor="let echeance of echeances">
-                <td>{{ echeance.student.matricule }} </td>
-                <td>{{ echeance.student.nom }} {{ echeance.student.prenom }}</td>
+                <td>{{ echeance.paiement.matricule }} </td>
+                <td>{{ echeance.paiement.nom }} {{ echeance.paiement.prenom }}</td>
                 <td>{{ echeance.montantParEcheance }} FCFA</td>
                 <td>{{ echeance.dateEcheance | date:'dd/MM/yyyy' }}</td>
                 <td>{{ echeance.statut }}</td>
               </tr>
             </tbody>
-            
+            ---->
           </table>
         </div>
       </div>

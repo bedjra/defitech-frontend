@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Echeance } from '../../MODELS/echeance';
 import { EcheanceService } from '../../SERVICES/echeance.service';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Echeance } from '../../MODELS/echeance';
 
 @Component({
   selector: 'app-rappel',
@@ -22,7 +22,7 @@ export class RappelComponent implements OnInit {
 
   // Charger les rappels d'échéances
   loadRappelsEcheances(): void {
-    /*
+    
     this.echeanceService.getRappelsAVenir().subscribe(
       (data: Echeance[]) => {
         this.echeances = data;
@@ -30,6 +30,6 @@ export class RappelComponent implements OnInit {
       (error) => {
         console.error('Erreur lors de la récupération des rappels', error);
       }
-    );*/
+    );
   }
 }

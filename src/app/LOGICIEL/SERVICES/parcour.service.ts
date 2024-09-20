@@ -1,18 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Parcours } from '../MODELS/parcours';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParcourService {
-  private apiUrl = 'http://localhost:8060/api/de'; // Remplacez par l'URL de votre backend
+  private apiUrl = 'http://localhost:8060/api/de/all-parcours'; 
+  private apiStatsUrl = 'http://localhost:8060/api/comptable/stats';
+  private apiNivUrl = 'http://localhost:8060/api/de'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-// Récupérer les parcours depuis le backend
-getAllParcours(): Observable<Parcours[]> {
-  return this.http.get<Parcours[]>(this.apiUrl);
-}
+  // Méthode pour récupérer les parcours depuis le backend
+  getParcours(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
+
+  getStats(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiStatsUrl);
+  }
+   // Méthode pour obtenir les niveaux par parcoursId
+   getNiveauxByParcours(parcoursId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiNivUrl}/niveauxByParcours/${parcoursId}`);
+  }
 }

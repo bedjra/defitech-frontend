@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row align-items-center" style="background-color: #fff; height: 55px;">
+  <div class="row align-items-center" style="background-color: #fff; ">
     <div class="col d-flex justify-content-between align-items-center">
       <h1 class="mb-0"><strong>Scolarite</strong></h1>
       <div class="comp d-flex align-items-center">
@@ -15,68 +15,63 @@
     </div>
   </div>
 </div>
+
 <pre></pre>
 <pre></pre>
 <pre></pre>
 <pre></pre>
 <pre></pre>
+
 <header>
   <div class="container">
-    <div class="row align-items-center">
+    <div class="row align-items-center d-flex">
       <div class="col-auto">
         <i class="fas fa-filter"></i>
       </div>
       <div class="col-auto" style="color: blue;">
         <span>Filtre par :</span>
       </div>
-      <div class="col">
-        <div class="d-flex align-items-center search-field">
-          <label for="nom" class="me-2">Filiere:</label>
-          <select [(ngModel)]="student.filiere" name="filiere" required>
-            <option value="" disabled selected>Choisir une filière...</option>
-            <option *ngFor="let filiere of filiereList" [value]="filiere">{{ filiere }}</option>
-          </select>
+      <form (ngSubmit)="onSearch()" #searchForm="ngForm" class="col d-flex align-items-center">
+        <div class="row w-100">
+          <div class="col">
+            <div class="d-flex align-items-center search-field">
+              <label for="filiere" class="me-2">Filière:</label>
+              <select id="filiere" name="filiere" [(ngModel)]="selectedFiliere" required>
+                <option value="" disabled selected>Choisir une filière...</option>
+                <option *ngFor="let filiere of filieres" [value]="filiere.nomFiliere">{{ filiere.nomFiliere }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="d-flex align-items-center search-field">
+              <label for="niveau" class="me-2">Niveau :</label>
+              <select id="niveau" name="niveau" [(ngModel)]="selectedNiveau" required>
+                <option value="" disabled selected>Choisir...</option>
+                <option value="PREMIERE_ANNEE">Première Année</option>
+                <option value="DEUXIEME_ANNEE">Deuxième Année</option>
+                <option value="TROISIEME_ANNEE">Troisième Année</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary">CHERCHER</button>
+          </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="d-flex align-items-center search-field">
-          <label for="prenom" class="me-2">Niveau :</label>
-          <select [(ngModel)]="student.niveau" name="niveau" required>
-            <option value="" disabled selected>Choisir...</option>
-            <option value="PREMIERE_ANNEE">Première Année</option>
-            <option value="DEUXIEME_ANNEE">Deuxième Année</option>
-            <option value="TROISIEME_ANNEE">Troisième Année</option>
-          </select>
-        </div>
-      </div>
-      <!------
-      <div class="col" >
-        <div class="d-flex align-items-center search-field">
-          <label for="prenom" class="me-2">Statut :</label>
-          <select matNativeControl required  style="width: 160px;">
-            <option value="" disabled selected>Choisir...</option>
-            <option value="volvo"> etudiant à jour</option>
-            <option value="saab"> etudiant non à jour </option>
-          </select>
-        </div>
-      </div>
-
----->
-
-      <div class="col-auto">
-        <button class="btn btn-primary">CHERCHER</button>
-      </div>
-      <div class="col-auto ms-2"> <!-- Ajoute une marge à gauche du bouton d'impression -->
+      </form>
+      <div class="col-auto ms-2">
         <button (click)="printEtudiant()" class="print-button" aria-label="Imprimer">
-          <i class="fas fa-print"></i> <!-- Icône d'impression Font Awesome -->
+          <i class="fas fa-print"></i>
         </button>
       </div>
     </div>
+
   </div>
 </header>
 <pre></pre>
 <pre></pre>
 <pre></pre>
+
+
 
 <section class="home-section">
   <div class="home-content">
@@ -91,20 +86,29 @@
                 <th>Matricule</th>
                 <th>Nom</th>
                 <th>Prenoms</th>
-                <th>Parcours</th>
-                <th>montantFinal</th>
+                <th>Ecolage</th>
                 <th>Reste</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let paiement of paiements">
-                <td>{{ paiement.student.matricule }} </td>
-                <td>{{ paiement.student.nom }} </td>
-                <td>{{ paiement.student.prenom }}</td>
-                <td>{{ paiement.student.parcours }}</td>
-                <td>{{ paiement.student.montantFinal }} FCFA</td>
-                <td>{{ paiement.reste }}</td>
+                <td>{{ paiement.etudiantMatricule }}</td>
+                <td>{{ paiement.etudiantNom }}</td>
+                <td>{{ paiement.etudiantPrenom }}</td>
+                <td>{{ paiement.reductionMontantFinal | currency }}</td>
+                <td>{{ paiement.resteEcolage | currency }}</td>
+                <td>
+                  <button (click)="openDetails(paiementModal, paiement)" type="button" class="btn btn-right">
+                    <i class="fas fa-list-alt"></i>
+                  </button>
+                  <button type="button" class="btn btn-right">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button type="button" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -120,7 +124,8 @@
           </div>
 
           <div class="col-12 col-md-auto mt-3 mt-md-0">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#renvoiFormModal" style="color: black;">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#renvoiFormModal"
+              style="color: black;">
               <i class="fas fa-coins"> &nbsp;LISTE DES RENVOIS</i>
             </button>
           </div>
@@ -146,111 +151,79 @@
 
             <div class="modal-body">
 
-              <form action="#" id="myForm">
-<!----
-                <div class=" imgholder">
-                  <img src="assets/logo.png" height="100px" width="200px">
+              <form [formGroup]="paiementForm" (ngSubmit)="submitPaiement()">
+                <div class="imgholder">
+                  <img src="assets/logo.png" height="100px" width="200px" alt="Logo">
                 </div>
-
+      
                 <div class="inputField">
                   <div class="form-group">
-                    <label for="studentName">Nom de l'étudiant :</label>
-                    <input type="text" id="studentName" [(ngModel)]="searchName" (input)="filterNames()"
-                      class="form-control" placeholder="Saisir le nom de l'étudiant" (focus)="showNameDropdown = true"
-                      (blur)="hideDropdown('name')">
-                    <ul *ngIf="showNameDropdown" class="list-group">
-                      <li *ngFor="let student of filteredNames" (click)="selectName(student)"
-                        class="list-group-item list-group-item-action">
-                        {{ student.etudiantNom }}
-                      </li>
-                    </ul>
+                    <label for="studentName">Nom :</label>
+                    <input type="text" id="studentName" formControlName="etudiantNom" class="form-control">
                   </div>
-
+      
                   <div class="form-group">
-                    <label for="studentFirstName">Prénom de l'étudiant :</label>
-                    <input type="text" id="studentFirstName" [(ngModel)]="searchFirstName" (input)="filterFirstNames()"
-                      class="form-control" placeholder="Saisir le prénom de l'étudiant"
-                      (focus)="showFirstNameDropdown = true" (blur)="hideDropdown('firstName')">
-                    <ul *ngIf="showFirstNameDropdown" class="list-group">
-                      <li *ngFor="let student of filteredFirstNames" (click)="selectFirstName(student)"
-                        class="list-group-item list-group-item-action">
-                        {{ student.etudiantPrenom }}
-                      </li>
-                    </ul>
+                    <label for="studentFirstName">Prénom :</label>
+                    <input type="text" id="studentFirstName" formControlName="etudiantPrenom" class="form-control">
                   </div>
-
-                  <div>
-                    <label for="name">Montant:</label>
-                    <input type="text" [(ngModel)]="paiement.montantActuel" name="montantActuel" required>
+      
+                  <div class="form-group">
+                    <label for="montantActuel">Montant:</label>
+                    <input type="number" id="montantActuel" formControlName="montantAPayer" class="form-control" required>
                   </div>
-
-                  <div class="input-box">
-                    <label for="date">Date de paiement</label><br>
-                    <input type="date" [(ngModel)]="paiement.datePaiement" name="datePaiment" required>
+      
+                  <div class="form-group">
+                    <label for="datePaiment">Date de paiement</label>
+                    <input type="date" id="datePaiment" formControlName="datePaiement" class="form-control" required>
                   </div>
                 </div>
---->
+      
+                
               </form>
             </div>
 
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" form="myForm" class="btn btn-primary submit">Submit</button>
+              <button type="submit" class="btn btn-primary submit">Submit</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="modal fade" id="renvoiFormModal" tabindex="-1" aria-labelledby="renvoiFormLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-      
-            <div class="modal-header">
-              <h1 class="modal-title" id="renvoiFormLabel">Fiche de Renvoi</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-      
-            <div class="modal-body">
-              <!-- Contenu de la fiche imprimable -->
-              <div class="printable-section">
-                <h2>Fiche de Renvoi</h2>
-                <p>Date : {{ today | date:'dd/MM/yyyy' }}</p>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Matricule</th>
-                      <th>Nom</th>
-                      <th>Prénoms</th>
-                      <th>Parcours</th>
-                      <th>Montant Final</th>
-                      <th>Reste</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let paiement of filteredPaiements">
-                      <td>{{ paiement.matricule }}</td>
-                      <td>{{ paiement.nom }}</td>
-                      <td>{{ paiement.prenom }}</td>
-                      <td>{{ paiement.parcours }}</td>
-                      <td>{{ paiement.montantFinal }} FCFA</td>
-                      <td>{{ paiement.reste }} FCFA</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-      
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-              <button type="button" class="btn btn-primary" (click)="printFiche()">Imprimer</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      
-      
+
+
 
     </div>
   </div>
 </section>
+
+
+<!-- Modal -->
+<ng-template #paiementModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Détails du paiement</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p><strong>Matricule :</strong> {{ selectedPaiement?.etudiantMatricule }}</p>
+    <p><strong>Nom :</strong> {{ selectedPaiement?.etudiantNom }}</p>
+    <p><strong>Prénoms :</strong> {{ selectedPaiement?.etudiantPrenom }}</p>
+    <p><strong>Parcours :</strong> {{ selectedPaiement?.parcoursNom }}</p>
+    <p><strong>Montant Final :</strong> {{ selectedPaiement?.reductionMontantFinal | currency }}</p>
+    <p><strong>Reste à Payer :</strong> {{ selectedPaiement?.resteEcolage | currency }}</p>
+    <p><strong>Modalité :</strong> {{ selectedPaiement?.typeModalite }}</p>
+    <p><strong>Date de Paiement :</strong> {{ selectedPaiement?.datePaiement }}</p>
+    <p><strong>Montant Déjà Payé :</strong> {{ selectedPaiement?.montantDejaPaye | currency }}</p>
+    <h6>Échéances :</h6>
+    <ul>
+      <li *ngFor="let echeance of selectedPaiement?.echeances">
+        Montant : {{ echeance.montantParEcheance | currency }} -
+        Date : {{ echeance.dateEcheance }} -
+        Statut : {{ echeance.statut }}
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button"  (click)="modal.dismiss('Close click')"  class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+  </div>
+</ng-template>

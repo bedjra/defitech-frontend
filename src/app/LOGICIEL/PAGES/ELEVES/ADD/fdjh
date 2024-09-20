@@ -1,0 +1,580 @@
+import { CommonModule } from '@angular/common';
+import { Component, TemplateRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink, RouterModule } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EtudiantService } from '../../../../../SERVICES/etudiant.service';
+
+@Component({
+  selector: 'app-bts1',
+  standalone: true,
+  imports: [RouterLink, CommonModule,RouterModule,
+    FormsModule,],
+  templateUrl: './bts1.component.html',
+  styleUrl: './bts1.component.css'
+})
+export class Bts1Component {
+
+  etudiants: any[] = [];
+  selectedEtudiant: any = null;
+  nom: string = '';
+  prenom: string = '';
+  boutonImpressionVisible: boolean = false;
+  etudiantId: string | null = null;  // Stocke l'ID de l'étudiant
+  isEditMode: boolean = false;
+  
+  constructor(
+    private modalService: NgbModal,
+    private etudiantService: EtudiantService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.getEtudiants();
+    
+  }
+
+  // Méthode pour récupérer les étudiants
+  getEtudiants(): void {
+    this.etudiantService.getEtudiantsByParcoursAndNiveau('BTS', 'PREMIERE_ANNEE')
+      .subscribe(
+        data => {
+          this.etudiants = data;
+        },
+        error => {
+          console.error('Erreur lors de la récupération des étudiants', error);
+        }
+      );
+  }
+  // Méthode pour supprimer un étudiant
+  deleteEtudiant(matricule: string): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')) {
+        this.etudiantService.deleteEtudiant(matricule).subscribe(
+            response => {
+                this.etudiants = this.etudiants.filter(etudiant => etudiant.etudiantMatricule !== matricule);
+                alert('Étudiant et ses paiements ont été supprimés avec succès.');
+            },
+            error => {
+                console.error('Erreur lors de la suppression de l\'étudiant', error);
+                alert('Une erreur s\'est produite lors de la suppression. Détails: ' + (error.error.message || error.message || 'Erreur inconnue'));
+            }
+        );
+    }
+}
+
+  // Méthode pour ouvrir le modal avec les détails d'un étudiant
+  openDetails(content: TemplateRef<any>, etudiant: any): void {
+    this.selectedEtudiant = etudiant;
+    this.modalService.open(content);
+  }
+
+  // Méthode de recherche des étudiants par nom et prénom
+  searchEtudiants(nom: string, prenom: string): void {
+    this.etudiantService.searchEtudiantsByNomAndPrenom(nom, prenom).subscribe(data => {
+      this.etudiants = data;
+    });
+  }
+
+  // Impression
+  printListe(): void {
+    window.print();
+    this.boutonImpressionVisible = true; // Vous pouvez retirer cette ligne si ce n'est pas nécessaire
+  }
+
+  // Fermer le modal
+  closeModal(): void {
+    const modalElement = document.getElementById('detailsModal');
+    if (modalElement) {
+      modalElement.classList.remove('show');
+    }
+    this.selectedEtudiant = null;
+  }
+
+// Méthode pour rediriger vers la page d'édition d'un étudiant
+editEtudiant(matricule: string): void {
+  this.router.navigate(['/editer-etudiant', matricule]); // Remplacez par le chemin correct
+}
+}
+
+
+
+-----------------------------------------------------
+----------------------------------------------------
+------------------------------------------------------
+----------------------------------------------------
+------------------------------------------------------
+-----------------------------------
+
+import { CommonModule } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ActivatedRoute, RouterLink } from "@angular/router";
+import { EnumsService } from "../../../../SERVICES/enums.service";
+import { EtudiantService } from "../../../../SERVICES/etudiant.service";
+import { FiliersService } from "../../../../SERVICES/filiers.service";
+import { ParcourService } from "../../../../SERVICES/parcour.service";
+import { Etudiant } from "../../../../MODELS/etudiant";
+import { HttpClient } from "@angular/common/http";
+
+@Component({
+  selector: 'app-add',
+  standalone: true,
+  imports: [CommonModule,
+    FormsModule,
+    RouterLink],
+  templateUrl: './add.component.html',
+  styleUrl: './add.component.css'
+})
+export class AddComponent implements OnInit {
+
+  statutBoursier: string[] = [];
+  mentions: string[] = [];
+  modalites: string[] = [];
+  parcoursList: any[] = [];
+  filiereList: any[] = [];
+  nomParcours: string = '';
+  niveaux: any[] = []
+  etudiant: Etudiant = {
+    etudiantNom: '',
+    etudiantPrenom: '',
+    etudiantAdresse: '',
+    etudiantTelephone: '',
+    etudiantMail: '',
+    etudiantDateNaiss: '',
+    etudiantLieuNais: '',
+    etudiantNationnalite: '',
+    etudiantSexe: '',
+    etudiantSerieBac: '',
+    etudiantAnneeBac: '',
+    etudiantPaysBac: '',
+    etudiantEtatProvenance: '',
+    etudiantAutreDiplome: '',
+    etudiantDateIns: '',
+    mentionBac: '',
+    boursier: '',
+    parcoursId: 0,
+    nomFiliere: '',
+    niveauEtude: '',
+    typeModalite: '',
+    tuteurNom: '',
+    tuteurPrenom: '',
+    tuteurProfession: '',
+    tuteurOrganismeEmployeur: '',
+    tuteurAdresse: '',
+    tuteurTelBureau: '',
+    tuteurTelDom: '',
+    tuteurCel: '',
+    tuteurEmail: ''
+  };
+
+  apiUrl: string = 'http://localhost:8060/api/comptable/ajout_etudiant';
+
+
+  constructor(
+    private filiersService: FiliersService,
+    private enumsService: EnumsService,
+    private parcourService: ParcourService,
+    private etudiantService: EtudiantService,
+    private http: HttpClient,
+    private route: ActivatedRoute) { }
+
+
+
+
+
+  ngOnInit(): void {
+    // Appel du service pour récupérer les parcours
+    this.parcourService.getParcours().subscribe(
+      (data) => {
+        this.parcoursList = data; // Assigner les données reçues à la liste
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des parcours', error);
+      }
+    );
+
+
+    this.enumsService.getModalites().subscribe(
+      (data) => {
+        this.modalites = data; // Assigner les données reçues à la liste
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des modalites', error);
+      }
+    )
+
+
+   
+
+    this.enumsService.getMentions().subscribe(
+      (data) => {
+        this.mentions = data; // Assigner les données reçues à la liste
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des mentions', error);
+      }
+    )
+
+
+    this.enumsService.getStatutBoursier().subscribe(
+      (data) => {
+        this.statutBoursier = data; // Assigner les données reçues à la liste
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des Bourses', error);
+      }
+    );
+
+    // Vérifiez si nous avons des paramètres d'édition
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        this.etudiant = {
+          etudiantNom: params['etudiantNom'] || '',
+          etudiantPrenom: params['etudiantPrenom'] || '',
+          etudiantAdresse: params['etudiantAdresse'] || '',
+          etudiantTelephone: params['etudiantTelephone'] || '',
+          etudiantMail: params['etudiantMail'] || '',
+          etudiantDateNaiss: params['etudiantDateNaiss'] || '',
+          etudiantLieuNais: params['etudiantLieuNais'] || '',
+          etudiantNationnalite: params['etudiantNationnalite'] || '',
+          etudiantSexe: params['etudiantSexe'] || '',
+          etudiantSerieBac: params['etudiantSerieBac'] || '',
+          etudiantAnneeBac: params['etudiantAnneeBac'] || '',
+          etudiantPaysBac: params['etudiantPaysBac'] || '',
+          etudiantEtatProvenance: params['etudiantEtatProvenance'] || '',
+          etudiantAutreDiplome: params['etudiantAutreDiplome'] || '',
+          etudiantDateIns: params['etudiantDateIns'] || '',
+          mentionBac: params['mentionBac'] || '',
+          boursier: params['boursier'] || '',
+          parcoursId: +params['parcoursId'] || 0, // Assurez-vous de convertir en nombre si nécessaire
+          nomFiliere: params['nomFiliere'] || '',
+          niveauEtude: params['niveauEtude'] || '',
+          typeModalite: params['typeModalite'] || '',
+          tuteurNom: params['tuteurNom'] || '',
+          tuteurPrenom: params['tuteurPrenom'] || '',
+          tuteurProfession: params['tuteurProfession'] || '',
+          tuteurOrganismeEmployeur: params['tuteurOrganismeEmployeur'] || '',
+          tuteurAdresse: params['tuteurAdresse'] || '',
+          tuteurTelBureau: params['tuteurTelBureau'] || '',
+          tuteurTelDom: params['tuteurTelDom'] || '',
+          tuteurCel: params['tuteurCel'] || '',
+          tuteurEmail: params['tuteurEmail'] || ''
+        };
+      }
+    });
+
+  }
+
+  onParcoursChange(event: any): void {
+    const parcoursId = event.target.value;
+    this.filiersService.getFiliereByParcours(parcoursId).subscribe(
+      (data) => {
+        this.filiereList = data;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des filières', error);
+      }
+    );
+  }
+
+  onSubmit() {
+    this.http.post(this.apiUrl, this.etudiant)
+      .subscribe(response => {
+        console.log(this.etudiant)
+        console.log('Étudiant ajouté avec succès', response);
+      }, error => {
+        console.log(this.etudiant)
+        console.error('Erreur lors de l’ajout de l’étudiant', error);
+      });
+  }
+
+  // Méthode pour réinitialiser le formulaire
+  resetEtudiant(): void {
+    this.etudiant = {
+      etudiantNom: '',
+      etudiantPrenom: '',
+      etudiantAdresse: '',
+      etudiantTelephone: '',
+      etudiantMail: '',
+      etudiantDateNaiss: '',
+      etudiantLieuNais: '',
+      etudiantNationnalite: '',
+      etudiantSexe: '',
+      etudiantSerieBac: '',
+      etudiantAnneeBac: '',
+      etudiantPaysBac: '',
+      etudiantEtatProvenance: '',
+      etudiantAutreDiplome: '',
+      etudiantDateIns: '',
+      mentionBac: '',
+      boursier: '',
+      parcoursId: 0,
+      nomFiliere: '',
+      niveauEtude: '',
+      typeModalite: '',
+      tuteurNom: '',
+      tuteurPrenom: '',
+      tuteurProfession: '',
+      tuteurOrganismeEmployeur: '',
+      tuteurAdresse: '',
+      tuteurTelBureau: '',
+      tuteurTelDom: '',
+      tuteurCel: '',
+      tuteurEmail: ''
+    };
+  }
+
+}
+-----------------
+------------------------------------------------------
+----------------------------------------------------
+------------------------------------------------------
+----------------------------------------------------
+-
+<header></header>
+    <h1>FORMULAIRE D'ENREGISTREMENT D'UN NOUVEL ÉTUDIANT</h1>
+</header>
+<section class="home-section">
+    <div class="home-content">
+        <div class="container">
+            <form (ngSubmit)="onSubmit()">
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">INFORMATIONS DE L'ÉTUDIANT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Nom</span>
+                        <input type="text" name="etudiantNom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Prénoms</span>
+                        <input type="text" name="etudiantPrenom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">E-mail</span>
+                        <input type="email" name="etudiantEmail" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Date de naissance</span>
+                        <input type="date" name="etudiantDateNaissance" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Lieu de naissance</span>
+                        <input type="text" name="etudiantLieuNaissance" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Nationalité</span>
+                        <input type="text" name="etudiantNationalite" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Sexe</span>
+                        <select name="etudiantSexe" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="masculin">Masculin</option>
+                            <option value="feminin">Féminin</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Baccalauréat (Série)</span>
+                        <input type="text" name="etudiantSerieBac" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Année du Bac</span>
+                        <input type="text" name="etudiantAnneeBac" required pattern="\d{4}">
+                    </div>
+
+                    <div class="input-box">
+                        <span class="details">Mention au bac</span>
+                        <select name="etudiantMentionBac" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="passable">Passable</option>
+                            <option value="assez-bien">Assez-Bien</option>
+                            <option value="bien">Bien</option>
+                            <option value="tres-bien">Très-Bien</option>
+                        </select>
+                    </div>
+
+                    <div class="input-box">
+                        <span class="details">Autres diplômes</span>
+                        <input type="text" name="etudiantAutresDiplomes">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Année d'obtention du bac</span>
+                        <input type="text" name="etudiantAnneeBac" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Pays d'obtention du bac</span>
+                        <input type="text" name="etudiantPaysBac" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Établissement de provenance</span>
+                        <input type="text" name="etudiantEtablissementProvenance" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Date d'inscription</span>
+                        <input type="date" name="etudiantDateInscription" required>
+                    </div>
+                </div>
+
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">INFORMATIONS DU TUTEUR OU PARENT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Nom du Tuteur</span>
+                        <input type="text" name="tuteurNom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Prénom du Tuteur</span>
+                        <input type="text" name="tuteurPrenom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Profession du Tuteur</span>
+                        <input type="text" name="tuteurProfession" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Organisme Employeur du Tuteur</span>
+                        <input type="text" name="tuteurOrganisme" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Adresse du Tuteur</span>
+                        <input type="text" name="tuteurAdresse" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Email du Tuteur</span>
+                        <input type="email" name="tuteurEmail" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone Bureau</span>
+                        <input type="text" name="tuteurTelBureau" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone Domicile</span>
+                        <input type="text" name="tuteurTelDomicile" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone Mobile</span>
+                        <input type="text" name="tuteurCel" required>
+                    </div>
+                </div>
+
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">INFORMATIONS RELATIVES À LA FILIÈRE ET AU PAIEMENT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Parcours</span>
+                        <select name="parcours" required>
+                            <option value="" disabled selected>Choisir un parcours...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-box">
+                        <span class="details">Filière</span>
+                        <select name="filiere" required>
+                            <option value="" disabled selected>Choisir une filière...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-box">
+                        <span class="details">Niveau</span>
+                        <select name="niveau" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="PREMIERE_ANNEE">Première Année</option>
+                            <option value="DEUXIEME_ANNEE">Deuxième Année</option>
+                            <option value="TROISIEME_ANNEE">Troisième Année</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-box">
+                        <span class="details">Boursier</span>
+                        <select name="boursier" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="OUI">Oui</option>
+                            <option value="NON">Non</option>
+                            <option value="COMPASSION">Compassion</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Montant Final</span>
+                        <input type="text" name="montantFinal" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Modalités de Paiement</span>
+                        <select name="modalitesPaiement" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="TOTALITE">Totalité</option>
+                            <option value="TROIS_TRANCHES">Trois Tranches</option>
+                            <option value="SEPT_TRANCHES">Sept Tranches</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="center-container">
+                    <div class="button-save">
+                        <button type="submit" class="bbtn-primary btn-lg">ENREGISTRER</button>
+                    </div>
+                    <div class="reins">
+                        <button type="reset" class="btn btn-danger">Annuler</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+-----------------------------------------------------
+----------------------------------------------------
+------------------------------------------------------
+----------------------------------------------------
+------------------------------------------------------
+----------------------------------------------------
+------------------------------------------------------
+----------------------------------------------------
+------------------------------------------------------
+----------------------------------------------------
+-
+<div class="modal-body">
+
+    <form action="#" id="myForm">
+
+      <div class=" imgholder">
+        <img src="assets/logo.png" height="100px" width="200px">
+      </div>
+
+      <div class="inputField">
+        <div class="form-group">
+          <label for="studentName">Nom :</label>
+          <input type="text" id="studentName">
+        </div>
+
+        <div class="form-group">
+          <label for="studentFirstName">Prénom :</label>
+          <input type="text" id="studentFirstName">
+
+        </div>
+
+        <div>
+          <label for="name">Montant:</label>
+          <input type="text" name="montantActuel" required>
+        </div>
+
+        <div class="input-box">
+          <label for="date">Date de paiement</label><br>
+          <input type="date" name="datePaiment" required>
+        </div>
+      </div>
+
+    </form>
+  </div>

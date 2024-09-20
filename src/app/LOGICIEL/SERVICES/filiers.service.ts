@@ -8,11 +8,11 @@ import { Filiere } from '../MODELS/filiers';
 })
 export class FiliersService {
 
-  private apiUrl = 'http://localhost:0203/api/de'; // Remplacez par l'URL de votre backend
+  private apiUrl = 'http://localhost:8060/api/de/filiereByparcours';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getFilieresByParcours(parcoursId: number): Observable<Filiere[]> {
-    return this.http.get<Filiere[]>(`${this.apiUrl}/filiereByparcours/${parcoursId}`);
+  getFiliereByParcours(parcoursId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${parcoursId}`);
   }
 }

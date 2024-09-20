@@ -43,7 +43,9 @@ header {
   font-size: 25px; /* Ajuste la taille de l'icône */
   color: blue /* Ajuste la couleur de l'icône */
 }
-
+.col{
+  padding-top: 5px;
+}
 .print-button {
   border: none;
   background: none;

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class PaiementService {
 
-  private apiUrl = 'http://localhost:0203/api/comptable/'; // Remplacez par l'URL de votre backend
+  private apiUrl = 'http://localhost:8060/api/comptable/'; 
 
   constructor(private http: HttpClient) {}
 

@@ -23,13 +23,12 @@
     </div>
     <div class="ess">
       <h3>Étudiants</h3>
-      <div class="number">{{ etudiantsCount }}</div>
+      <div class="number">{{ count }}</div>
     </div>
   </mat-card>
 <pre><pre>
 <pre></pre>
 </pre></pre>
-<pre></pre>
 <pre></pre>
   <mat-card class="card professeurs">
     <div class="image">
@@ -37,24 +36,21 @@
     </div>
     <div class="ess">
       <h3>Etudiants à jour</h3>
-      <div class="number">{{ professeursCount }}</div>
+      <div class="number">{{ ajour }}</div>
     </div>
   </mat-card>
-<pre>
-  <pre></pre>
-  <pre></pre>
-  <pre></pre>
-</pre>
-  <mat-card class="card filieres">
-    <div class="image">
-      <img [src]="'https://static.vecteezy.com/system/resources/previews/001/963/329/large_2x/happy-graduated-student-in-black-hat-and-coat-with-diploma-free-vector.jpg'"  height="60" width="80" priority>
-    </div>
+<pre></pre>
+<pre></pre>
+<mat-card class="card filieres">
+  <div class="image">
+    <img [src]="'https://static.vecteezy.com/system/resources/previews/001/963/329/large_2x/happy-graduated-student-in-black-hat-and-coat-with-diploma-free-vector.jpg'"  height="60" width="80" priority>
+  </div>
 
-    <div class="ess">
-      <h3>Etudiant non à jour</h3>
-      <div class="number">{{ filieresCount }}</div>
-    </div>
-  </mat-card>
+  <div class="ess">
+    <h3>Etudiant non à jour</h3>
+    <div class="number">{{ nonjour }}</div>
+  </div>
+</mat-card>
 </div>
 
 
