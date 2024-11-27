@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule } from '@angular/router';
+import { ParcourService } from '../../../../../SERVICES/parcour.service';
+import { Statistiques } from '../../../../../MODELS/statistiques';
+import { Paiement } from '../../../../../MODELS/paiement';
+import { EcheanceService } from '../../../../../SERVICES/echeance.service';
+import { Paie } from '../../../../../MODELS/paie';
 
 @Component({
   selector: 'app-licence-jour',
@@ -12,6 +17,52 @@ import { RouterLink, RouterModule } from '@angular/router';
   templateUrl: './licence-jour.component.html',
   styleUrl: './licence-jour.component.css'
 })
-export class LicenceJourComponent {
+export class LicenceJourComponent implements OnInit {
+  statistiques: Statistiques[] = [];
+  parcoursId: Number = 1 ;  // Par exemple
+  rappels: Paie[] = [];
+  loading = true;
+  error: string | null = null;
+  nombreRappels: number = 0; // Variable pour stocker le nombre de paiements
 
+  constructor(    private echeanceService: EcheanceService,
+    private statistiquesService: ParcourService) { }
+
+  ngOnInit(): void {
+    this.getStatistiques();
+
+    this.echeanceService.getRappelsAVenir().subscribe(
+      (data: Paie[]) => {
+        this.rappels = data;
+        this.loading = false;
+      },
+      (err) => {
+        this.error = 'Erreur lors du chargement des rappels.';
+        this.loading = false;
+      }
+    );
+  
+
+  this.echeanceService.getNombreRappelsAVenir().subscribe(
+    (nombre: number) => {
+      this.nombreRappels = nombre; // Stocker le nombre dans la variable
+    },
+    (err) => {
+      console.error('Erreur lors de la récupération du nombre de rappels.', err);
+    }
+  );
+
+
+  }
+
+  // Méthode pour récupérer les statistiques des étudiants
+  getStatistiques(): void {
+    this.statistiquesService.getStatistiquesParParcours(this.parcoursId)
+      .subscribe((data: Statistiques[]) => {
+        this.statistiques = data;
+      }, error => {
+        console.error('Erreur lors de la récupération des statistiques', error);
+      });
+  }
+  
 }

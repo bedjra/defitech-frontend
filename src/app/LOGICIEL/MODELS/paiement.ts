@@ -1,18 +1,26 @@
-import { Echeance } from "./echeance";
 
-export interface Paiement {
-etudiantId: number;
-  etudiantNom: string;
+export interface Paiement {  etudiantNom: string;
   etudiantPrenom: string;
   etudiantMatricule: string;
   filiereNom: string;
   parcoursNom: string;
-  reductionMontantFinal: number;
   niveauEtude: string;
+  reductionMontantFinal: number;
   montantDejaPaye: number;
   typeModalite: string;
-  datePaiement: string; // ou Date, selon la façon dont vous gérez les dates
   montantActuel: number;
+  //montantAchanger: number;
   resteEcolage: number;
-  echeances: Echeance[];
+  datePaiement: Date;
+  etudiantId : number;
+  statutScolarite: string;
+  tuteurMail?: string;
+    echeances: Array<{
+    id: number;
+    montantParEcheance: number;
+    resteSurEcheance: number;
+    dateEcheance: string;
+    dateEnvoi: string;
+    statut: string;
+  }>;
 }

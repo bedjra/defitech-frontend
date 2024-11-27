@@ -1,4 +1,26 @@
-
+.print-button {
+  border: none;
+  background: none;
+  font-size: 20px; /* Taille de l'icône */
+  cursor: pointer;
+}
+.print-button:hover {
+  color: #007bff; /* Couleur au survol */
+}
+.print-button:active {
+  color: #007bff; /* Couleur au survol */
+}
+.badge {
+  top: 1px; /* Ajustez la position verticalement */
+  background-color: red; /* Couleur de fond du badge */
+  color: white; /* Couleur du texte */
+  border-radius: 50%; /* Forme ronde */
+  padding: 0 0.5em; /* Espacement à l'intérieur */
+  font-size: 0.7em; /* Taille de police */
+  display: flex; /* Pour centrer le texte */
+  justify-content: center; /* Pour centrer le texte */
+  align-items: center; /* Pour centrer le texte */
+}
 .home-content .sales-boxes .recent-sales {
   width: 95%;
   background: white;
@@ -26,13 +48,13 @@ margin-right: 0; /* Supprimez les marges négatives */
 
 header {
   justify-content: center;
-  width: 86%;
+  width: 92%;
   background-color: rgb(200, 204, 198);
   padding: 7px;
-  margin-left: 94px;
+  margin-left: 54px;
   text-align: center;
   color: black;
-  height: 80px;
+  height: 110px;
 }
 .fas.fa-filter {
   font-size: 25px; /* Ajuste la taille de l'icône */
@@ -47,4 +69,13 @@ header {
 }
 .print-button:hover {
   color: #007bff; /* Couleur au survol */
+}
+.arragement {
+  display: flex;                  /* Utiliser Flexbox pour la mise en page */
+  justify-content: center;        /* Centrer les éléments horizontalement */
+  align-items: center;            /* Centrer les éléments verticalement */
+}
+.colfiliere{
+  justify-content: center;
+  margin-right: 50px;
 }

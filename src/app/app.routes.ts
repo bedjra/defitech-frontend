@@ -15,6 +15,11 @@ import { L2Component } from './LOGICIEL/PAGES/ELEVES/PARCOURS/LicenceJOUR/l2/l2.
 import { L3Component } from './LOGICIEL/PAGES/ELEVES/PARCOURS/LicenceJOUR/l3/l3.component';
 import { LicenceJourComponent } from './LOGICIEL/PAGES/ELEVES/PARCOURS/LicenceJOUR/licence-jour/licence-jour.component';
 import { LicenceSoirComponent } from './LOGICIEL/PAGES/ELEVES/PARCOURS/LicenceSOIR/licence-soir/licence-soir.component';
+import { DeclassementComponent } from './LOGICIEL/PAGES/ELEVES/ADD/declassement/declassement.component';
+import { FicheComponent } from './LOGICIEL/PAGES/IMPRESSION/fiche/fiche.component';
+import { DefitechComponent } from './LOGICIEL/PAGES/IMPRESSION/defitech/defitech.component';
+import { PaieComponent } from './LOGICIEL/PAGES/PAIEMENT/paie/paie.component';
+import { LoginComponent } from './LOGICIEL/PAGES/app-connexion/app/login/login.component';
 
 
 
@@ -22,13 +27,20 @@ import { LicenceSoirComponent } from './LOGICIEL/PAGES/ELEVES/PARCOURS/LicenceSO
 
 export const routes: Routes = [
 
+  { path: 'login', component: LoginComponent  },
+
+
+  { path: 'defitech', component: DefitechComponent },
+
+  { path: 'fiche-de-renvoi', component: FicheComponent },
   {
+    
     path: '',
     component: PrincipaleComponent,
     children: [
       { path: 'statistique', component: AccueilComponent },
       { path: 'inscrire-étudiant', component: AddComponent },
-      { path: 'editer-etudiant/:matricule', component: AddComponent }, // Route pour éditer l'étudiant
+      { path: 'modifier-étudiant/:matricule', component: DeclassementComponent },
       { path: 'parcours', component: ParcourComponent },
       { path: 'licence-du-jour' ,  component: LicenceJourComponent },
           { path: 'licence1', component: L1Component },            
@@ -38,11 +50,14 @@ export const routes: Routes = [
           { path: 'bts1', component: Bts1Component },  
           { path: 'bts2', component: Bts2Component },  
      { path: 'licence-du-soir', component: LicenceSoirComponent },    
-      { path: 'scolarite', component: ScolariteComponent },
-      { path: 'profil', component: ParametreComponent },
+    /*  { path: 'scolarite', component: ScolariteComponent },*/
+    { path: 'paiement/:matricule', component: PaieComponent },
+
+      /*{ path: 'profil', component: ParametreComponent },*/
       { path: 'rappel', component: RappelComponent },
+      { path: 'scolarite', component: PaieComponent },
 
     ]
-  },
 
+  },
 ];

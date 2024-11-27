@@ -7,6 +7,17 @@
   .print-button:hover {
     color: #007bff; /* Couleur au survol */
   }
+  .badge {
+    top: 1px; /* Ajustez la position verticalement */
+    background-color: red; /* Couleur de fond du badge */
+    color: white; /* Couleur du texte */
+    border-radius: 50%; /* Forme ronde */
+    padding: 0 0.5em; /* Espacement à l'intérieur */
+    font-size: 0.7em; /* Taille de police */
+    display: flex; /* Pour centrer le texte */
+    justify-content: center; /* Pour centrer le texte */
+    align-items: center; /* Pour centrer le texte */
+  }
   header {
     width: 100%;
     background-color: #0073e6;
@@ -150,4 +161,11 @@
   }
   
   
+  .modal-lg {
+    max-width: 90%; /* Ajuster la taille à 90% de l'écran */
+  }
+  .modal-body {
+    max-height: 60vh; /* Limiter la hauteur et ajouter un défilement si nécessaire */
+    overflow-y: auto;
+  }
   

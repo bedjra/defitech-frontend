@@ -4,6 +4,7 @@
       <h1 class="mb-0"><strong>Etudiant de BTS 1</strong></h1>
       <div class="comp d-flex align-items-center">
         <button class="print-button" aria-label="Imprimer">
+          <span class="badge">{{ nombreRappels }}</span>
           <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
         </button>
         &nbsp; &nbsp;&nbsp; &nbsp;
@@ -44,13 +45,29 @@
       <div class="col-auto">
         <button  class="btn btn-primary" (click)="searchEtudiants(nom, prenom)">CHERCHER</button>
       </div>
-      <div class="col-auto ms-2"> <!-- Ajoute une marge à gauche du bouton d'impression -->
-        <button class="print-button" aria-label="Imprimer">
-          <i class="fas fa-print"></i> <!-- Icône d'impression Font Awesome -->
-        </button>
+      <pre></pre>
+      <pre></pre>
+      <div class="arragement">
+        <div class="colfiliere">
+          <div class="d-flex align-items-center search-field">
+            <label for="nomFiliere">Filière: &nbsp;</label>
+            <select (change)="loadEtudiants()" [(ngModel)]="selectedFiliere">
+              <option value="" disabled selected>Choisir...</option>
+              <option *ngFor="let filiere of filiereList" [value]="filiere.nomFiliere">
+                {{ filiere.nomFiliere }}           
+               </select>
+          </div>
+        </div>
+       
+        <div class="col-auto ms-2">
+          <button class="print-button" aria-label="Imprimer" (click)="redirectToDefitech()">
+            <i class="fas fa-print"></i>
+          </button>
+        </div>
+        </div>
       </div>
+      
     </div>
-  </div>
 </header>
  
 <pre></pre>
@@ -93,10 +110,11 @@
                 <button  (click)="editEtudiant(etudiant.etudiantMatricule)" type="button" class="btn btn-right">
                   <i class="fas fa-pencil-alt"></i>
                 </button>  
-                <!-- Bouton pour supprimer -->
+                <!-- Bouton pour supprimer --
                 <button (click)="deleteEtudiant(etudiant.etudiantMatricule)" type="button" class="btn btn-danger">
                   <i class="fas fa-trash-alt"></i>
                 </button>
+               ---->
               </td>
             </tr>
           </tbody>
@@ -159,7 +177,7 @@
     <p><strong>Nom du parcours:</strong> {{ selectedEtudiant?.nomParcours }}</p>
     <p><strong>Boursier:</strong> {{ selectedEtudiant?.boursier }}</p>
     <p><strong>Modalités de paiement:</strong> {{ selectedEtudiant?.typeModalite }}</p>
-    <p><strong> Montant Final:</strong> {{ selectedEtudiant?.reductionMontantFinal  | currency:'XOF' }}</p>
+    <p><strong> Montant Final:</strong> {{ selectedEtudiant?.reductionMontantFinal   }} FCFA</p>
 
     <!-- Informations sur le tuteur -->
     <h5>Informations du tuteur</h5>

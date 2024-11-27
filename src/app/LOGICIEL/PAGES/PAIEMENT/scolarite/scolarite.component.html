@@ -4,8 +4,10 @@
       <h1 class="mb-0"><strong>Scolarite</strong></h1>
       <div class="comp d-flex align-items-center">
         <button class="print-button" aria-label="Imprimer">
+          <span class="badge">{{ nombreRappels }}</span>
           <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
         </button>
+        
         &nbsp; &nbsp;&nbsp; &nbsp;
         <span class="mr-2">COMPTABLE : &nbsp; &nbsp;</span>
         <a href="javascript:void(0);" [routerLink]="['/profil']">
@@ -58,11 +60,7 @@
           </div>
         </div>
       </form>
-      <div class="col-auto ms-2">
-        <button (click)="printEtudiant()" class="print-button" aria-label="Imprimer">
-          <i class="fas fa-print"></i>
-        </button>
-      </div>
+
     </div>
 
   </div>
@@ -83,7 +81,6 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Matricule</th>
                 <th>Nom</th>
                 <th>Prenoms</th>
                 <th>Ecolage</th>
@@ -93,24 +90,36 @@
             </thead>
             <tbody>
               <tr *ngFor="let paiement of paiements">
-                <td>{{ paiement.etudiantMatricule }}</td>
                 <td>{{ paiement.etudiantNom }}</td>
                 <td>{{ paiement.etudiantPrenom }}</td>
-                <td>{{ paiement.reductionMontantFinal | currency }}</td>
-                <td>{{ paiement.resteEcolage | currency }}</td>
+                <!-- Utilisation du pipe number avec la locale 'fr' pour avoir des espaces comme séparateur -->
+                <td>{{ paiement.reductionMontantFinal }} FCFA</td>
+                <!-- Couleur rouge si resteEcolage est supérieur à 0, et formatage avec espace -->
+                <td [ngClass]="{'text-danger': paiement.resteEcolage > 0 }">
+                  {{ paiement.resteEcolage }} FCFA
+                </td>
                 <td>
-                  <button (click)="openDetails(paiementModal, paiement)" type="button" class="btn btn-right">
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userForm"
+                    style="color: black; border: black; background-color: rgb(255, 255, 255)"
+                    (click)="selectEtudiant(paiement)" [disabled]="paiement.resteEcolage === 0">
+                    <i class="fas fa-plus"></i>
+                  </button>
+
+                  <button style="color: black; border: black; background-color: rgb(255, 255, 255)"
+                    (click)="openDetails(paiementModal, paiement)" type="button" class="btn btn-right">
                     <i class="fas fa-list-alt"></i>
                   </button>
-                  <button type="button" class="btn btn-right">
+                  
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editForm" style="color: black; border: black; background-color: rgb(255, 255, 255)"  (click)="selectEtudiant(paiement)">
                     <i class="fas fa-pencil-alt"></i>
                   </button>
-                  <button type="button" class="btn btn-danger">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
+                  
+
+
                 </td>
               </tr>
             </tbody>
+
           </table>
         </div>
       </div>
@@ -124,18 +133,20 @@
           </div>
 
           <div class="col-12 col-md-auto mt-3 mt-md-0">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#renvoiFormModal"
+            <button class="btn btn-primary" (click)="redirectToFicheRenvoi()" [disabled]="isRenvoiButtonDisabled"
               style="color: black;">
-              <i class="fas fa-coins"> &nbsp;LISTE DES RENVOIS</i>
+              <i class="fas fa-print"> &nbsp;LISTE DES RENVOIS</i>
             </button>
           </div>
 
+          <!----
           <div class="col-12 col-md-auto mt-3 mt-md-0">
             <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#userForm"
               style="color: black;">
               <i class="fas fa-plus"> &nbsp; Ajouter Scolarite</i>
             </button>
           </div>
+          ---->
         </div>
       </div>
       <div class="modal fade" id="userForm">
@@ -146,49 +157,56 @@
               <h1 class="modal-title">
                 Formulaire de paiement de Scolarité
               </h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+              
             </div>
 
             <div class="modal-body">
 
-              <form [formGroup]="paiementForm" (ngSubmit)="submitPaiement()">
+              <form #paiementForm="ngForm" (ngSubmit)="onSubmit(paiementForm)">
                 <div class="imgholder">
                   <img src="assets/logo.png" height="100px" width="200px" alt="Logo">
                 </div>
-      
+
                 <div class="inputField">
                   <div class="form-group">
                     <label for="studentName">Nom :</label>
-                    <input type="text" id="studentName" formControlName="etudiantNom" class="form-control">
+                    <input type="text" id="studentName" class="form-control" [(ngModel)]="paiement.etudiantNom"
+                      name="etudiantNom" required>
                   </div>
-      
+
                   <div class="form-group">
                     <label for="studentFirstName">Prénom :</label>
-                    <input type="text" id="studentFirstName" formControlName="etudiantPrenom" class="form-control">
+                    <input type="text" id="studentFirstName" class="form-control" [(ngModel)]="paiement.etudiantPrenom"
+                      name="etudiantPrenom" required>
                   </div>
-      
+
                   <div class="form-group">
                     <label for="montantActuel">Montant:</label>
-                    <input type="number" id="montantActuel" formControlName="montantAPayer" class="form-control" required>
+                    <input type="number" id="montantActuel" [(ngModel)]="paiement.montantActuel" name="montantActuel"
+                      class="form-control" required>
                   </div>
-      
-                  <div class="form-group">
-                    <label for="datePaiment">Date de paiement</label>
-                    <input type="date" id="datePaiment" formControlName="datePaiement" class="form-control" required>
-                  </div>
-                </div>
-      
-                
-              </form>
-            </div>
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary submit">Submit</button>
+                  <div class="form-group">
+                    <label for="datePaiement">Date de paiement</label>
+                    <input type="date" id="datePaiement" [(ngModel)]="paiement.datePaiement" name="datePaiement"
+                      class="form-control" required>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" id="closeModalButton" class="btn btn-secondary"
+                      data-bs-dismiss="modal">Close</button>
+                    <button type="submit" [disabled]="!paiementForm.form.valid"
+                      class="btn btn-primary submit">Submit</button>
+                  </div>
+
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
+
 
 
 
@@ -209,21 +227,135 @@
     <p><strong>Nom :</strong> {{ selectedPaiement?.etudiantNom }}</p>
     <p><strong>Prénoms :</strong> {{ selectedPaiement?.etudiantPrenom }}</p>
     <p><strong>Parcours :</strong> {{ selectedPaiement?.parcoursNom }}</p>
-    <p><strong>Montant Final :</strong> {{ selectedPaiement?.reductionMontantFinal | currency }}</p>
-    <p><strong>Reste à Payer :</strong> {{ selectedPaiement?.resteEcolage | currency }}</p>
+    <p><strong>Montant Final :</strong> {{ selectedPaiement?.reductionMontantFinal }} FCFA</p>
+    <p><strong>Reste à Payer :</strong> {{ selectedPaiement?.resteEcolage }} FCFA</p>
     <p><strong>Modalité :</strong> {{ selectedPaiement?.typeModalite }}</p>
     <p><strong>Date de Paiement :</strong> {{ selectedPaiement?.datePaiement }}</p>
-    <p><strong>Montant Déjà Payé :</strong> {{ selectedPaiement?.montantDejaPaye | currency }}</p>
+    <p><strong>Montant Déjà Payé :</strong> {{ selectedPaiement?.montantDejaPaye }} FCFA</p>
+
+    
     <h6>Échéances :</h6>
-    <ul>
-      <li *ngFor="let echeance of selectedPaiement?.echeances">
-        Montant : {{ echeance.montantParEcheance | currency }} -
-        Date : {{ echeance.dateEcheance }} -
-        Statut : {{ echeance.statut }}
+    <ul class="echeances-list" style="list-style-type: none; padding: 0;">
+      <li *ngFor="let echeance of selectedPaiement?.echeances" class="echeance-item"
+        style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <span class="id"  style="font-weight: bold;">ID : {{ echeance.id }}</span> &nbsp;&nbsp; - &nbsp;&nbsp;
+        <span class="montant" >Montant : {{ echeance.montantParEcheance}} FCFA</span>  &nbsp;&nbsp; - &nbsp;&nbsp;
+        <span class="montant" >Reste  : {{ echeance.resteSurEcheance }} FCFA</span> &nbsp;&nbsp; - &nbsp;&nbsp;
+
+        <span class="date"  >Date de fin: {{ echeance.dateEcheance }}</span> &nbsp;&nbsp; - &nbsp;&nbsp;
+        <span class="statut"
+          [ngClass]="{ 'statut-payé': echeance.statut === 'Payé', 'statut-non-payé': echeance.statut === 'Non payé' }"
+          [ngStyle]="{ 'color': echeance.statut === 'Payé' ? 'green' : 'red' }">
+          Statut : {{ echeance.statut }}
+        </span>
+
       </li>
     </ul>
+
   </div>
   <div class="modal-footer">
-    <button type="button"  (click)="modal.dismiss('Close click')"  class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+    <button type="button" (click)="modal.dismiss('Close click')" class="btn btn-secondary"
+      data-dismiss="modal">Fermer</button>
   </div>
 </ng-template>
+
+
+<div class="modal fade" id="editUserForm" tabindex="-1" aria-labelledby="editUserFormLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="editUserFormLabel">Modifier Scolarité</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm" (ngSubmit)="onEditSubmit(editForm)">
+          <div class="inputField">
+            <div class="form-group">
+              <label for="editStudentName">Nom :</label>
+              <input type="text" id="editStudentName" class="form-control" name="etudiantNom" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editStudentFirstName">Prénom :</label>
+              <input type="text" id="editStudentFirstName" class="form-control" name="etudiantPrenom" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editMontantActuel">Montant:</label>
+              <input type="number" id="editMontantActuel" name="montantActuel" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editDatePaiement">Date de paiement</label>
+              <input type="date" id="editDatePaiement" name="datePaiement" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="submit" [disabled]="!editForm.form.valid" class="btn btn-primary">Modifier</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="editForm">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title">
+          Formulaire de modification des paiement de Scolarité
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form #paiementForm="ngForm" (ngSubmit)="onSubmit(paiementForm)">
+          <div class="imgholder">
+            <img src="assets/logo.png" height="100px" width="200px" alt="Logo">
+          </div>
+
+          <div class="inputField">
+            <div class="form-group">
+              <label for="studentName">Nom :</label>
+              <input type="text" id="studentName" class="form-control" [(ngModel)]="paiement.etudiantNom"
+                name="etudiantNom" required>
+            </div>
+
+            <div class="form-group">
+              <label for="studentFirstName">Prénom :</label>
+              <input type="text" id="studentFirstName" class="form-control" [(ngModel)]="paiement.etudiantPrenom"
+                name="etudiantPrenom" required>
+            </div>
+
+            <div class="form-group">
+              <label for="montantActuel">Montant:</label>
+              <input type="number" id="montantActuel" [(ngModel)]="paiement.montantActuel" name="montantActuel"
+                class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="datePaiement">Date de paiement</label>
+              <input type="date" id="datePaiement" [(ngModel)]="paiement.datePaiement" name="datePaiement"
+                class="form-control" required>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" id="closeModalButton" class="btn btn-secondary"
+                data-bs-dismiss="modal">Close</button>
+              <button type="editSubmit" [disabled]="!paiementForm.form.valid"
+                class="btn btn-primary submit">Mofifier</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -12,7 +12,7 @@
         [class.active]="activeLink === 'statistique'"
         (click)="setActive('statistique')">
         <i class="fas fa-chart-bar"></i>
-        <span class="links_name">Table de bord</span>
+        <span class="links_name">Tableau de bord</span>
       </a>
     </li>
 
@@ -41,10 +41,11 @@
         [routerLink]="['/scolarite']" 
         [class.active]="activeLink === 'scolarite'"
         (click)="setActive('scolarite')">
-        <i class="fas fa-check"></i>
+        <img [src]="'assets/png.png'"  style="color: black;" height="40" width="40" priority>
         <span class="links_name">Scolarité</span>
       </a>
     </li>
+   
     <li>
       <a 
         [routerLink]="['/rappel']" 
@@ -54,6 +55,7 @@
         <span class="links_name">Rappel</span>
       </a>
     </li>
+
     <li class="log_out">
       <a 
         [routerLink]="['/login']" 
@@ -63,5 +65,7 @@
         <span class="links_name">Déconnexion</span>
       </a>
     </li>
+    
   </ul>
+
 </div>

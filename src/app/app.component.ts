@@ -10,7 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     RouterOutlet,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'] // Correction ici (ajout du 's')

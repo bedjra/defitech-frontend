@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RenvoiComponent } from './renvoi.component';
+import { DeclassementComponent } from './declassement.component';
 
-describe('RenvoiComponent', () => {
-  let component: RenvoiComponent;
-  let fixture: ComponentFixture<RenvoiComponent>;
+describe('DeclassementComponent', () => {
+  let component: DeclassementComponent;
+  let fixture: ComponentFixture<DeclassementComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RenvoiComponent]
+      imports: [DeclassementComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(RenvoiComponent);
+    fixture = TestBed.createComponent(DeclassementComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

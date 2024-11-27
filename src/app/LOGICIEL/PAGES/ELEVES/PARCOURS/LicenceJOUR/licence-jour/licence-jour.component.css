@@ -7,6 +7,20 @@
 .print-button:hover {
   color: #007bff; /* Couleur au survol */
 }
+.print-button:active {
+  color: #007bff; /* Couleur au survol */
+}
+.badge {
+  top: 1px; /* Ajustez la position verticalement */
+  background-color: red; /* Couleur de fond du badge */
+  color: white; /* Couleur du texte */
+  border-radius: 50%; /* Forme ronde */
+  padding: 0 0.5em; /* Espacement à l'intérieur */
+  font-size: 0.7em; /* Taille de police */
+  display: flex; /* Pour centrer le texte */
+  justify-content: center; /* Pour centrer le texte */
+  align-items: center; /* Pour centrer le texte */
+}
 header {
     width: 100%;
     padding: 7px;
@@ -55,7 +69,6 @@ header {
     }
   }
   
-   
 
      .home-content .sales-boxes .recent-sales {
       width: 95%;

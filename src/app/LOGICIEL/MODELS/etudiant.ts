@@ -1,4 +1,5 @@
 export interface Etudiant {
+  etudiantMatricule: string;
   etudiantNom: string;
   etudiantPrenom: string;
   etudiantAdresse: string;

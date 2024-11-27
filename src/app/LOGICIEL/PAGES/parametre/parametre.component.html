@@ -4,9 +4,11 @@
         <h1 class="mb-0"><strong>Profil</strong></h1>
         <div class="comp d-flex align-items-center">
           <button class="print-button" aria-label="Imprimer">
+            <span class="badge">{{ nombreRappels }}</span>
             <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
           </button>
-
+          
+          &nbsp; &nbsp;&nbsp; &nbsp;
           <span class="mr-2">COMPTABLE : &nbsp; &nbsp;</span>
           <a href="javascript:void(0);" [routerLink]="['/profil']">
             <i class="fas fa-user"></i>

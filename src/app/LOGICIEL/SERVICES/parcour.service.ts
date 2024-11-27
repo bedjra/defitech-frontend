@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Statistiques } from '../MODELS/statistiques';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParcourService {
   private apiUrl = 'http://localhost:8060/api/de/all-parcours'; 
+  private apiNivUrl = 'http://localhost:8060/api/comptable'; 
   private apiStatsUrl = 'http://localhost:8060/api/comptable/stats';
-  private apiNivUrl = 'http://localhost:8060/api/de'; 
-
+  private apiStatisUrl = 'http://localhost:8060/api/comptable'; 
   constructor(private http: HttpClient) {}
 
   // Méthode pour récupérer les parcours depuis le backend
@@ -20,8 +21,15 @@ export class ParcourService {
   getStats(): Observable<any[]> {
     return this.http.get<any[]>(this.apiStatsUrl);
   }
-   // Méthode pour obtenir les niveaux par parcoursId
-   getNiveauxByParcours(parcoursId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiNivUrl}/niveauxByParcours/${parcoursId}`);
+  // Méthode pour obtenir les statistiques des étudiants par parcours
+  getStatistiquesParParcours(parcoursId: Number): Observable<Statistiques[]> {
+    const url = `${this.apiStatisUrl}/statistiques-etudiants/${parcoursId}`;
+    return this.http.get<Statistiques[]>(url);
+  }
+
+
+  // Méthode pour obtenir les niveaux par parcoursId
+  getNiveauxByParcours(parcoursId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiNivUrl}/niveau/${parcoursId}`);
   }
 }

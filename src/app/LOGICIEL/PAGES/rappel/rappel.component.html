@@ -1,20 +1,23 @@
-<div class="container-fluid" >
-    <div class="row align-items-center"
-    style="background-color: #fff; height: 55px;">    <div class="col d-flex justify-content-between align-items-center">
-        <h1 class="mb-0"><strong>Rappel</strong></h1>
-        <div class="comp d-flex align-items-center">
-          <button class="print-button" aria-label="Imprimer">
-            <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
-          </button>
-          &nbsp; &nbsp;&nbsp; &nbsp;
-          <span class="mr-2">COMPTABLE : &nbsp; &nbsp;</span>
-          <a href="javascript:void(0);" [routerLink]="['/profil']">
-            <i class="fas fa-user"></i>
-          </a>
-        </div>
+<div class="container-fluid">
+  <div class="row align-items-center" style="background-color: #fff; height: 55px;">
+    <div class="col d-flex justify-content-between align-items-center">
+      <h1 class="mb-0"><strong>Rappel</strong></h1>
+      <div class="comp d-flex align-items-center">
+        <button class="print-button" aria-label="Imprimer">
+          <span class="badge">{{ nombreRappels }}</span>
+          <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
+        </button>
+        
+        &nbsp; &nbsp;&nbsp; &nbsp;
+        <span class="mr-2">COMPTABLE : &nbsp; &nbsp;</span>
+        <a href="javascript:void(0);" [routerLink]="['/profil']">
+          <i class="fas fa-user"></i>
+        </a>
       </div>
     </div>
+  </div>
 </div>
+
 
 <pre></pre>
 <pre></pre>
@@ -30,24 +33,37 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Matricule</th>
-                <th>Etudiant</th>
+                <th>Nom</th>
+                <th>Premon</th>
                 <th>Montant</th>
-                <th>Date Échéance</th>
-                <th>Statut</th>
+                <th>Date d'envoi </th>
+                <th>Date fin échéance</th>
+                <th>TuteurEmail</th>
               </tr>
             </thead>
-            <!-----
+           
             <tbody>
-              <tr *ngFor="let echeance of echeances">
-                <td>{{ echeance.paiement.matricule }} </td>
-                <td>{{ echeance.paiement.nom }} {{ echeance.paiement.prenom }}</td>
-                <td>{{ echeance.montantParEcheance }} FCFA</td>
-                <td>{{ echeance.dateEcheance | date:'dd/MM/yyyy' }}</td>
-                <td>{{ echeance.statut }}</td>
+              <tr *ngFor="let paie of rappels">
+                <td>{{ paie.etudiantNom }} </td>
+
+                <td>  {{ paie.etudiantPrenom }}</td> 
+
+                <td *ngFor="let echeance of paie.echeances">
+                  {{ echeance.resteSurEcheance }} FCFA
+                </td>
+
+                <td *ngFor="let echeance of paie.echeances">
+                  {{ echeance.dateEnvoi | date: 'dd/MM/yyyy' }} 
+                </td>
+
+                <td *ngFor="let echeance of paie.echeances">
+                  {{ echeance.dateEcheance | date: 'dd/MM/yyyy' }} 
+                </td>
+                
+                <td>{{ paie.tuteurMail  }}</td> 
               </tr>
             </tbody>
-            ---->
+            
           </table>
         </div>
       </div>

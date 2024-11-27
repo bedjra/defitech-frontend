@@ -4,6 +4,7 @@
       <h1 class="mb-0"><strong>Etudiant de BTS</strong></h1>
       <div class="comp d-flex align-items-center">
         <button class="print-button" aria-label="Imprimer">
+          <span class="badge">{{ nombreRappels }}</span>
           <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
         </button>
         &nbsp; &nbsp;&nbsp; &nbsp;
@@ -36,11 +37,9 @@
   
   
 
+
   <pre></pre>
-  <pre></pre>
-  <pre></pre>
-  <pre></pre>
-  <pre></pre>
+  <pre></pre><pre></pre>
   <section class="home-section">
     <div class="home-content">
       <div class="sales-boxes position-relative">
@@ -51,31 +50,22 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Niveau</th>
                       <th>Filiere</th>
-                      <th>Effectif total</th>
-                      <th>Filles</th>
+                      <th>Niveau</th>
+                      <th>Effectif Total</th>
                       <th>Garcons</th>
+                      <th>Filles</th>
                 </tr>
               </thead>
               
               <tbody>
-        
-                <tr>
-                  <td>BTS 1</td>
-                  <td>DA</td>
-                  <td>02</td>
-                  <td>01</td>
-                  <td>01</td>
+                <tr *ngFor="let stat of statistiques">
+                  <td>{{ stat.nom }}</td>
+                  <td>{{ stat.niveau }}</td>
+                  <td>{{ stat.totalEtudiants }}</td>
+                <td>{{ stat.totalGarcons }}</td>
+                <td>{{ stat.totalFilles }}</td>
                 </tr>
-                <tr>
-                  <td>BTS 1</td>
-                  <td>CE</td>
-                  <td>02</td>
-                  <td>01</td>
-                  <td>01</td>
-                </tr>
-                
               </tbody>
               
             </table>
@@ -91,8 +81,8 @@
               <span class="h4">STATISTIQUES DES ETUDIANTS DE BTS</span>
             </div>
             <div class="col-12 col-md-auto mt-3 mt-md-0">
-              <button class="btn btn-light newUser" [routerLink]="['/inscrire étudiant']" style="color: black;">
-                <i class="fas fa-plus"></i> &nbsp; Ajouter Etudiant
+              <button class="btn btn-light newUser" [routerLink]="['/parcours']" style="color: black;">
+                <i class="fas fa-arrow-left"></i>&nbsp; retour
               </button>
             </div>
           </div>

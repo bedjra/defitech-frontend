@@ -7,6 +7,29 @@
   border: 5px solid #cccaca;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
+.print-button {
+  border: none;
+  background: none;
+  font-size: 20px; /* Taille de l'icône */
+  cursor: pointer;
+}
+.print-button:hover {
+  color: #007bff; /* Couleur au survol */
+}
+.print-button:active {
+  color: #007bff; /* Couleur au survol */
+}
+.badge {
+  top: 1px; /* Ajustez la position verticalement */
+  background-color: red; /* Couleur de fond du badge */
+  color: white; /* Couleur du texte */
+  border-radius: 50%; /* Forme ronde */
+  padding: 0 0.5em; /* Espacement à l'intérieur */
+  font-size: 0.7em; /* Taille de police */
+  display: flex; /* Pour centrer le texte */
+  justify-content: center; /* Pour centrer le texte */
+  align-items: center; /* Pour centrer le texte */
+}
 .table td {
   padding: 20px; /* Ajoute 10px de padding à l'intérieur de chaque cellule */
 }
@@ -31,10 +54,10 @@ margin-right: 0; /* Supprimez les marges négatives */
 }
 header {
   justify-content: center;
-  width: 86%;
+  width: 90%;
   background-color: rgb(200, 204, 198);
   padding: 7px;
-  margin-left: 94px;
+  margin-left: 55px;
   text-align: center;
   color: black;
   height: 80px;
@@ -131,9 +154,6 @@ header {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   border: 5px solid #cccaca;
 }
-
-
-
 
 
 table tr td{
@@ -271,7 +291,7 @@ h1, h5{
     margin: 0;
     font-size: 12pt;
   }
-
+  .modal 
   table {
     width: 100%;
     border-collapse: collapse;
@@ -282,4 +302,77 @@ h1, h5{
     padding: 8px;
     text-align: left;
   }
+
+  tr {
+    cursor: pointer; 
+  }
+  tr {
+    border-bottom: 5px solid black; /* Trait noir entre chaque étudiant */
+  }
+  
+  tr:last-child {
+    border-bottom: none; /* Pas de bordure pour la dernière ligne */
+  }
+
+
+
+
+
+
+  .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .modal-body p {
+    margin: 10px 0;
+  }
+  
+  .echeances-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .echeance-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .montant {
+    font-weight: bold;
+  }
+  
+  .statut-payé {
+    color: green;
+  }
+  
+  .statut-non-payé {
+    color: red;
+  }
+  
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  
+
 }

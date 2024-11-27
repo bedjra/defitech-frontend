@@ -1,109 +1,306 @@
-import { CommonModule } from '@angular/common';
-import { Component, TemplateRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, RouterModule } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EtudiantService } from '../../../../../SERVICES/etudiant.service';
+<div class="container-fluid">
+    <div class="row align-items-center" style="background-color: #fff; height: 55px;">
+        <div class="col d-flex justify-content-between align-items-center">
+            <h1 class="mb-0"><strong>Ajouter Etudiant</strong></h1>
+            <div class="comp d-flex align-items-center">
+                <button class="print-button" aria-label="Imprimer">
+                    <i class="fas fa-bell" [routerLink]="['/rappel']"></i>
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <span class="mr-2">COMPTABLE : &nbsp; &nbsp;</span>
+                <a href="javascript:void(0);" [routerLink]="['/profil']">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-@Component({
-  selector: 'app-bts1',
-  standalone: true,
-  imports: [RouterLink, CommonModule,RouterModule,
-    FormsModule,],
-  templateUrl: './bts1.component.html',
-  styleUrl: './bts1.component.css'
-})
-export class Bts1Component {
+<header>
+    <h1>FORMULAIRE D'ENREGISTREMENT D'UN NOUVEL ÉTUDIANT</h1>
+</header>
 
-  etudiants: any[] = [];
-  selectedEtudiant: any = null;
-  nom: string = '';
-  prenom: string = '';
-  boutonImpressionVisible: boolean = false;
-  etudiantId: string | null = null;  // Stocke l'ID de l'étudiant
-  isEditMode: boolean = false;
-  
-  constructor(
-    private modalService: NgbModal,
-    private etudiantService: EtudiantService,
-    private router: Router
-  ) { }
+<section class="home-section">
+    <div class="home-content">
+        <div class="container">
+            <form (ngSubmit)="onSubmit()" #etudiantForm="ngForm">
 
-  ngOnInit(): void {
-    this.getEtudiants();
-    
-  }
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">INFORMATIONS DE L'ETUDIANT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Nom</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantNom" name="etudiantNom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Prénoms</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantPrenom" name="etudiantPrenom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Adresse</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantAdresse" name="etudiantAdresse" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Telephone</span>
+                        <input type="email" [(ngModel)]="etudiant.etudiantTelephone" name="etudiantTelephone" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">E-mail</span>
+                        <input type="email" [(ngModel)]="etudiant.etudiantMail" name="etudiantMail" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Date de naissance</span>
+                        <input type="date" [(ngModel)]="etudiant.etudiantDateNaiss" name="etudiantDateNaiss" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Lieu de naissance</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantLieuNais" name="etudiantLieuNais" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Nationalité</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantNationnalite" name="etudiantNationnalite"
+                            required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Sexe</span>
+                        <select [(ngModel)]="etudiant.etudiantSexe" name="etudiantSexe" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option value="M">Masculin</option>
+                            <option value="F">Féminin</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Baccalauréat (Série)</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantSerieBac" name="etudiantSerieBac" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Mention au bac</span>
+                        <select [(ngModel)]="etudiant.mentionBac" name="etudiantmentionBac" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option *ngFor="let mention of mentions" [value]="mention">{{ mention }}</option>
+                        </select>
+                    </div>
 
-  // Méthode pour récupérer les étudiants
-  getEtudiants(): void {
-    this.etudiantService.getEtudiantsByParcoursAndNiveau('BTS', 'PREMIERE_ANNEE')
-      .subscribe(
-        data => {
-          this.etudiants = data;
-        },
-        error => {
-          console.error('Erreur lors de la récupération des étudiants', error);
-        }
-      );
-  }
-  // Méthode pour supprimer un étudiant
-  deleteEtudiant(matricule: string): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')) {
-        this.etudiantService.deleteEtudiant(matricule).subscribe(
-            response => {
-                this.etudiants = this.etudiants.filter(etudiant => etudiant.etudiantMatricule !== matricule);
-                alert('Étudiant et ses paiements ont été supprimés avec succès.');
-            },
-            error => {
-                console.error('Erreur lors de la suppression de l\'étudiant', error);
-                alert('Une erreur s\'est produite lors de la suppression. Détails: ' + (error.error.message || error.message || 'Erreur inconnue'));
-            }
-        );
-    }
-}
+                    <div class="input-box">
+                        <span class="details">Autres diplômes</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantAutreDiplome" name="etudiantAutreDiplome">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Année d'obtention du bac</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantAnneeBac" name="etudiantAnneeBac" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Pays d'obtention du bac</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantPaysBac" name="etudiantPaysBac" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Établissement de provenance</span>
+                        <input type="text" [(ngModel)]="etudiant.etudiantEtatProvenance" name="etudiantEtatProvenance"
+                            required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Date d'Inscription</span>
+                        <input type="date" name="etudiantDateIns" [(ngModel)]="etudiant.etudiantDateIns" required>
+                    </div>
+                </div>
 
-  // Méthode pour ouvrir le modal avec les détails d'un étudiant
-  openDetails(content: TemplateRef<any>, etudiant: any): void {
-    this.selectedEtudiant = etudiant;
-    this.modalService.open(content);
-  }
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">INFORMATIONS DU TUTEUR OU PARENT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Nom du Tuteur</span>
+                        <input type="text" name="tuteurNom" [(ngModel)]="etudiant.tuteurNom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Prénom du Tuteur</span>
+                        <input type="text" name="tuteurPrenom" [(ngModel)]="etudiant.tuteurPrenom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Profession du Tuteur</span>
+                        <input type="text" name="tuteurProfession" [(ngModel)]="etudiant.tuteurProfession" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Organisme Employeur du Tuteur</span>
+                        <input type="text" name="tuteurOrganisme" [(ngModel)]="etudiant.tuteurOrganismeEmployeur"
+                            required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Adresse du Tuteur</span>
+                        <input type="text" name="tuteurAdresse" [(ngModel)]="etudiant.tuteurAdresse" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Email du Tuteur</span>
+                        <input type="email" name="tuteurEmail" [(ngModel)]="etudiant.tuteurEmail" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone Bureau</span>
+                        <input type="text" name="tuteurTelBureau" [(ngModel)]="etudiant.tuteurTelBureau" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone Domicile</span>
+                        <input type="text" name="tuteurTelDomicile" [(ngModel)]="etudiant.tuteurTelDom" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Téléphone Mobile</span>
+                        <input type="text" name="tuteurCel" [(ngModel)]="etudiant.tuteurCel" required>
+                    </div>
+                </div>
 
-  // Méthode de recherche des étudiants par nom et prénom
-  searchEtudiants(nom: string, prenom: string): void {
-    this.etudiantService.searchEtudiantsByNomAndPrenom(nom, prenom).subscribe(data => {
-      this.etudiants = data;
-    });
-  }
+                <div class="container my-4">
+                    <div class="d-flex align-items-center divider">
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                        <h3 class="mx-3 mb-0">INFORMATIONS RELATIVES À LA FILIÈRE ET AU PAIEMENT</h3>
+                        <div class="flex-grow-1 border-bottom border-dark"></div>
+                    </div>
+                </div>
+                <div class="user-details">
 
-  // Impression
-  printListe(): void {
-    window.print();
-    this.boutonImpressionVisible = true; // Vous pouvez retirer cette ligne si ce n'est pas nécessaire
-  }
-
-  // Fermer le modal
-  closeModal(): void {
-    const modalElement = document.getElementById('detailsModal');
-    if (modalElement) {
-      modalElement.classList.remove('show');
-    }
-    this.selectedEtudiant = null;
-  }
-
-// Méthode pour rediriger vers la page d'édition d'un étudiant
-editEtudiant(matricule: string): void {
-  this.router.navigate(['/editer-etudiant', matricule]); // Remplacez par le chemin correct
-}
-}
+                    <div class="input-box">
+                        <span class="details" for="parcoursSelect">Le parcours:</span>
+                        <select id="parcoursSelect" name="parcoursSelect" (change)="onParcoursChange($event)"
+                            [(ngModel)]="etudiant.parcoursId">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option *ngFor="let parcours of parcoursList" [value]="parcours.parcoursId">
+                                {{ parcours.nomParcours }}
+                            </option>
+                        </select>
+                    </div>
 
 
+                    <div class="input-box">
+                        <span class="details" for="filiereSelect">Filières:</span>
+                        <select id="filiereSelect" name="filiereSelect" [(ngModel)]="etudiant.nomFiliere">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option *ngFor="let filiere of filiereList" [value]="filiere.nomFiliere">
+                                {{filiere.nomFiliere }}</option>
+                        </select>
+                    </div>
 
------------------------------------------------------
-----------------------------------------------------
-------------------------------------------------------
-----------------------------------------------------
-------------------------------------------------------
------------------------------------
+
+                    <div class="input-box">
+                        <span class="details" for="niveauEtude">Niveau d'étude:</span>
+                        <select id="niveauSelect" name="niveauSelect" [(ngModel)]="etudiant.niveauEtude" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option *ngFor="let niveau of niveauxDisponibles" [value]="niveau">
+                                {{ niveau }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="input-box">
+                        <span class="details" for="statutBoursier">Statut de bourse :</span>
+                        <select [(ngModel)]="etudiant.boursier" id="statutSelect" name="statutSelect">
+                            <option value="" disabled selected>Choisir...</option>
+                            <option *ngFor="let statut of statutBoursier" [value]="statut">{{ statut }}</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="input-box">
+                        <span class="details" for="typeModalite">Type de modalite:</span>
+                        <select [(ngModel)]="etudiant.typeModalite" name="typeModalite" required>
+                            <option value="" disabled selected>Choisir...</option>
+                            <option *ngFor="let modalite of modalites" [value]="modalite">{{ modalite }}</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <div class="center-container">
+                    <div class="button-save">
+                        <button type="submit" class="bbtn-primary btn-lg">ENREGISTRER</button>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <div class="reins">
+                        <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------
+----------------------
+------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
@@ -115,6 +312,7 @@ import { FiliersService } from "../../../../SERVICES/filiers.service";
 import { ParcourService } from "../../../../SERVICES/parcour.service";
 import { Etudiant } from "../../../../MODELS/etudiant";
 import { HttpClient } from "@angular/common/http";
+import { NiveauService } from "../../../../SERVICES/niveau.service";
 
 @Component({
   selector: 'app-add',
@@ -127,14 +325,15 @@ import { HttpClient } from "@angular/common/http";
 })
 export class AddComponent implements OnInit {
 
+  parcoursList: any[] = [];             
+  niveauxDisponibles: string[] = [];    
   statutBoursier: string[] = [];
   mentions: string[] = [];
   modalites: string[] = [];
-  parcoursList: any[] = [];
   filiereList: any[] = [];
   nomParcours: string = '';
-  niveaux: any[] = []
   etudiant: Etudiant = {
+    etudiantMatricule:'',
     etudiantNom: '',
     etudiantPrenom: '',
     etudiantAdresse: '',
@@ -175,6 +374,7 @@ export class AddComponent implements OnInit {
     private enumsService: EnumsService,
     private parcourService: ParcourService,
     private etudiantService: EtudiantService,
+    private niveauService: NiveauService,
     private http: HttpClient,
     private route: ActivatedRoute) { }
 
@@ -225,72 +425,132 @@ export class AddComponent implements OnInit {
       }
     );
 
-    // Vérifiez si nous avons des paramètres d'édition
-    this.route.queryParams.subscribe(params => {
-      if (params) {
-        this.etudiant = {
-          etudiantNom: params['etudiantNom'] || '',
-          etudiantPrenom: params['etudiantPrenom'] || '',
-          etudiantAdresse: params['etudiantAdresse'] || '',
-          etudiantTelephone: params['etudiantTelephone'] || '',
-          etudiantMail: params['etudiantMail'] || '',
-          etudiantDateNaiss: params['etudiantDateNaiss'] || '',
-          etudiantLieuNais: params['etudiantLieuNais'] || '',
-          etudiantNationnalite: params['etudiantNationnalite'] || '',
-          etudiantSexe: params['etudiantSexe'] || '',
-          etudiantSerieBac: params['etudiantSerieBac'] || '',
-          etudiantAnneeBac: params['etudiantAnneeBac'] || '',
-          etudiantPaysBac: params['etudiantPaysBac'] || '',
-          etudiantEtatProvenance: params['etudiantEtatProvenance'] || '',
-          etudiantAutreDiplome: params['etudiantAutreDiplome'] || '',
-          etudiantDateIns: params['etudiantDateIns'] || '',
-          mentionBac: params['mentionBac'] || '',
-          boursier: params['boursier'] || '',
-          parcoursId: +params['parcoursId'] || 0, // Assurez-vous de convertir en nombre si nécessaire
-          nomFiliere: params['nomFiliere'] || '',
-          niveauEtude: params['niveauEtude'] || '',
-          typeModalite: params['typeModalite'] || '',
-          tuteurNom: params['tuteurNom'] || '',
-          tuteurPrenom: params['tuteurPrenom'] || '',
-          tuteurProfession: params['tuteurProfession'] || '',
-          tuteurOrganismeEmployeur: params['tuteurOrganismeEmployeur'] || '',
-          tuteurAdresse: params['tuteurAdresse'] || '',
-          tuteurTelBureau: params['tuteurTelBureau'] || '',
-          tuteurTelDom: params['tuteurTelDom'] || '',
-          tuteurCel: params['tuteurCel'] || '',
-          tuteurEmail: params['tuteurEmail'] || ''
-        };
-      }
-    });
-
+ 
   }
 
   onParcoursChange(event: any): void {
     const parcoursId = event.target.value;
+    // Récupérer les filières associées au parcours via le service
     this.filiersService.getFiliereByParcours(parcoursId).subscribe(
       (data) => {
-        this.filiereList = data;
+        this.filiereList = data; // Mettre à jour la liste des filières avec les données récupérées
       },
       (error) => {
-        console.error('Erreur lors de la récupération des filières', error);
+        console.error('Erreur lors de la récupération des filières :', error); // Gérer l'erreur en cas d'échec
+      }
+    );
+     // Récupérer les niveaux associés au parcours sélectionné
+     this.getNiveauxByParcours(parcoursId);
+  }
+  // Méthode pour récupérer les niveaux d'étude en fonction de l'ID du parcours
+  getNiveauxByParcours(parcoursId: number): void {
+    this.parcourService.getNiveauxByParcours(parcoursId).subscribe(
+      (data: string[]) => {
+        this.niveauxDisponibles = data;  // Mettre à jour les niveaux disponibles
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des niveaux :', error);
       }
     );
   }
-
+/*
   onSubmit() {
-    this.http.post(this.apiUrl, this.etudiant)
-      .subscribe(response => {
-        console.log(this.etudiant)
-        console.log('Étudiant ajouté avec succès', response);
-      }, error => {
-        console.log(this.etudiant)
-        console.error('Erreur lors de l’ajout de l’étudiant', error);
-      });
+    const confirmation = window.confirm("Êtes-vous sûr de vouloir ajouter cet étudiant ?");
+  
+    if (confirmation) {
+      this.http.post(this.apiUrl, this.etudiant)
+        .subscribe(response => {
+          console.log(this.etudiant);
+          console.log('Étudiant ajouté avec succès', response);
+          
+          // Vérifier si la réponse indique un ajout réussi
+          if (response) { // Assure-toi que la condition vérifie correctement la réponse
+            this.resetEtudiant(); // Réinitialiser le formulaire
+          }
+        }, error => {
+          console.log(this.etudiant);
+          console.error('Erreur lors de l’ajout de l’étudiant', error);
+          alert(' Étudiant ajouté avec succès.');
+          
+            this.resetEtudiant(); // Réinitialiser le formulaire
+          
+        });
+    }
   }
+  */
+  onSubmit() {
+    const confirmation = window.confirm("Êtes-vous sûr de vouloir ajouter cet étudiant ?");
+
+    if (confirmation) {
+        // Créez un tableau avec uniquement les champs obligatoires
+        const requiredFields = [
+            { field: this.etudiant.etudiantNom, name: "Nom" },
+            { field: this.etudiant.etudiantPrenom, name: "Prénom" },
+            { field: this.etudiant.etudiantMail, name: "Email" },
+            { field: this.etudiant.etudiantAdresse, name: "Adresse" },
+            { field: this.etudiant.etudiantTelephone, name: "Téléphone" },
+            { field: this.etudiant.etudiantDateNaiss, name: "Date de Naissance" },
+            { field: this.etudiant.etudiantSexe, name: "Sexe" },
+            { field: this.etudiant.etudiantSerieBac, name: "Série Bac" },
+            { field: this.etudiant.mentionBac, name: "Mention Bac" },
+            { field: this.etudiant.parcoursId, name: "Parcours ID" },
+            { field: this.etudiant.nomFiliere, name: "Nom Filière" },
+            { field: this.etudiant.niveauEtude, name: "Niveau d'Étude" },
+            { field: this.etudiant.typeModalite, name: "Type Modalité" },
+            { field: this.etudiant.tuteurNom, name: "Nom du Tuteur" },
+            { field: this.etudiant.tuteurPrenom, name: "Prénom du Tuteur" },
+            { field: this.etudiant.tuteurProfession, name: "Profession du Tuteur" },
+            { field: this.etudiant.tuteurAdresse, name: "Adresse du Tuteur" },
+            { field: this.etudiant.tuteurTelBureau, name: "Téléphone Bureau du Tuteur" },
+            { field: this.etudiant.tuteurCel, name: "Téléphone Portable du Tuteur" },
+            { field: this.etudiant.tuteurEmail, name: "Email du Tuteur" },
+        ];
+
+        // Filtrer pour trouver les champs qui sont vides
+        const missingFields = requiredFields.filter(item => 
+            (typeof item.field === 'string' && item.field.trim() === '') || // Vérifie si c'est une chaîne et utilise trim
+            (typeof item.field === 'number' && item.field === 0) // Vérifie si c'est un nombre
+        );
+
+        if (missingFields.length > 0) {
+            alert("Veuillez remplir les champs obligatoires : " + missingFields.map(item => item.name).join(", "));
+            return; // Ne pas continuer si des champs requis ne sont pas remplis
+        }
+
+        console.log('Objet étudiant avant l\'envoi:', this.etudiant);
+
+        this.http.post(this.apiUrl, this.etudiant)
+            .subscribe(response => {
+                console.log(this.etudiant);
+                console.log('Étudiant ajouté avec succès', response);
+
+                if (response) {
+                  alert(' Étudiant ajouté avec succès.'); 
+                    this.resetEtudiant(); // Réinitialiser le formulaire
+                }
+            }, error => {
+                console.log(this.etudiant);
+
+                 // Afficher les messages d'erreur du backend
+                 if (error.status === 409) {
+                  alert('Erreur : Étudiant déjà ajouté.'); // Message spécifique pour le conflit
+              } else if (error.error) {
+                  alert('Erreur : ' + error.error); // Autres messages d'erreur spécifiques
+              } 
+               // this.resetEtudiant(); // Réinitialiser le formulaire
+            });
+    }
+}
+
+
+
+
+
 
   // Méthode pour réinitialiser le formulaire
   resetEtudiant(): void {
     this.etudiant = {
+      etudiantMatricule:'',
       etudiantNom: '',
       etudiantPrenom: '',
       etudiantAdresse: '',
@@ -325,256 +585,3 @@ export class AddComponent implements OnInit {
   }
 
 }
------------------
-------------------------------------------------------
-----------------------------------------------------
-------------------------------------------------------
-----------------------------------------------------
--
-<header></header>
-    <h1>FORMULAIRE D'ENREGISTREMENT D'UN NOUVEL ÉTUDIANT</h1>
-</header>
-<section class="home-section">
-    <div class="home-content">
-        <div class="container">
-            <form (ngSubmit)="onSubmit()">
-                <div class="container my-4">
-                    <div class="d-flex align-items-center divider">
-                        <div class="flex-grow-1 border-bottom border-dark"></div>
-                        <h3 class="mx-3 mb-0">INFORMATIONS DE L'ÉTUDIANT</h3>
-                        <div class="flex-grow-1 border-bottom border-dark"></div>
-                    </div>
-                </div>
-                <div class="user-details">
-                    <div class="input-box">
-                        <span class="details">Nom</span>
-                        <input type="text" name="etudiantNom" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Prénoms</span>
-                        <input type="text" name="etudiantPrenom" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">E-mail</span>
-                        <input type="email" name="etudiantEmail" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Date de naissance</span>
-                        <input type="date" name="etudiantDateNaissance" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Lieu de naissance</span>
-                        <input type="text" name="etudiantLieuNaissance" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Nationalité</span>
-                        <input type="text" name="etudiantNationalite" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Sexe</span>
-                        <select name="etudiantSexe" required>
-                            <option value="" disabled selected>Choisir...</option>
-                            <option value="masculin">Masculin</option>
-                            <option value="feminin">Féminin</option>
-                        </select>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Baccalauréat (Série)</span>
-                        <input type="text" name="etudiantSerieBac" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Année du Bac</span>
-                        <input type="text" name="etudiantAnneeBac" required pattern="\d{4}">
-                    </div>
-
-                    <div class="input-box">
-                        <span class="details">Mention au bac</span>
-                        <select name="etudiantMentionBac" required>
-                            <option value="" disabled selected>Choisir...</option>
-                            <option value="passable">Passable</option>
-                            <option value="assez-bien">Assez-Bien</option>
-                            <option value="bien">Bien</option>
-                            <option value="tres-bien">Très-Bien</option>
-                        </select>
-                    </div>
-
-                    <div class="input-box">
-                        <span class="details">Autres diplômes</span>
-                        <input type="text" name="etudiantAutresDiplomes">
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Année d'obtention du bac</span>
-                        <input type="text" name="etudiantAnneeBac" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Pays d'obtention du bac</span>
-                        <input type="text" name="etudiantPaysBac" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Établissement de provenance</span>
-                        <input type="text" name="etudiantEtablissementProvenance" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Date d'inscription</span>
-                        <input type="date" name="etudiantDateInscription" required>
-                    </div>
-                </div>
-
-                <div class="container my-4">
-                    <div class="d-flex align-items-center divider">
-                        <div class="flex-grow-1 border-bottom border-dark"></div>
-                        <h3 class="mx-3 mb-0">INFORMATIONS DU TUTEUR OU PARENT</h3>
-                        <div class="flex-grow-1 border-bottom border-dark"></div>
-                    </div>
-                </div>
-                <div class="user-details">
-                    <div class="input-box">
-                        <span class="details">Nom du Tuteur</span>
-                        <input type="text" name="tuteurNom" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Prénom du Tuteur</span>
-                        <input type="text" name="tuteurPrenom" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Profession du Tuteur</span>
-                        <input type="text" name="tuteurProfession" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Organisme Employeur du Tuteur</span>
-                        <input type="text" name="tuteurOrganisme" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Adresse du Tuteur</span>
-                        <input type="text" name="tuteurAdresse" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Email du Tuteur</span>
-                        <input type="email" name="tuteurEmail" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Téléphone Bureau</span>
-                        <input type="text" name="tuteurTelBureau" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Téléphone Domicile</span>
-                        <input type="text" name="tuteurTelDomicile" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Téléphone Mobile</span>
-                        <input type="text" name="tuteurCel" required>
-                    </div>
-                </div>
-
-                <div class="container my-4">
-                    <div class="d-flex align-items-center divider">
-                        <div class="flex-grow-1 border-bottom border-dark"></div>
-                        <h3 class="mx-3 mb-0">INFORMATIONS RELATIVES À LA FILIÈRE ET AU PAIEMENT</h3>
-                        <div class="flex-grow-1 border-bottom border-dark"></div>
-                    </div>
-                </div>
-                <div class="user-details">
-                    <div class="input-box">
-                        <span class="details">Parcours</span>
-                        <select name="parcours" required>
-                            <option value="" disabled selected>Choisir un parcours...</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-box">
-                        <span class="details">Filière</span>
-                        <select name="filiere" required>
-                            <option value="" disabled selected>Choisir une filière...</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-box">
-                        <span class="details">Niveau</span>
-                        <select name="niveau" required>
-                            <option value="" disabled selected>Choisir...</option>
-                            <option value="PREMIERE_ANNEE">Première Année</option>
-                            <option value="DEUXIEME_ANNEE">Deuxième Année</option>
-                            <option value="TROISIEME_ANNEE">Troisième Année</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-box">
-                        <span class="details">Boursier</span>
-                        <select name="boursier" required>
-                            <option value="" disabled selected>Choisir...</option>
-                            <option value="OUI">Oui</option>
-                            <option value="NON">Non</option>
-                            <option value="COMPASSION">Compassion</option>
-                        </select>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Montant Final</span>
-                        <input type="text" name="montantFinal" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Modalités de Paiement</span>
-                        <select name="modalitesPaiement" required>
-                            <option value="" disabled selected>Choisir...</option>
-                            <option value="TOTALITE">Totalité</option>
-                            <option value="TROIS_TRANCHES">Trois Tranches</option>
-                            <option value="SEPT_TRANCHES">Sept Tranches</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="center-container">
-                    <div class="button-save">
-                        <button type="submit" class="bbtn-primary btn-lg">ENREGISTRER</button>
-                    </div>
-                    <div class="reins">
-                        <button type="reset" class="btn btn-danger">Annuler</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
------------------------------------------------------
-----------------------------------------------------
-------------------------------------------------------
-----------------------------------------------------
-------------------------------------------------------
-----------------------------------------------------
-------------------------------------------------------
-----------------------------------------------------
-------------------------------------------------------
-----------------------------------------------------
--
-<div class="modal-body">
-
-    <form action="#" id="myForm">
-
-      <div class=" imgholder">
-        <img src="assets/logo.png" height="100px" width="200px">
-      </div>
-
-      <div class="inputField">
-        <div class="form-group">
-          <label for="studentName">Nom :</label>
-          <input type="text" id="studentName">
-        </div>
-
-        <div class="form-group">
-          <label for="studentFirstName">Prénom :</label>
-          <input type="text" id="studentFirstName">
-
-        </div>
-
-        <div>
-          <label for="name">Montant:</label>
-          <input type="text" name="montantActuel" required>
-        </div>
-
-        <div class="input-box">
-          <label for="date">Date de paiement</label><br>
-          <input type="date" name="datePaiment" required>
-        </div>
-      </div>
-
-    </form>
-  </div>

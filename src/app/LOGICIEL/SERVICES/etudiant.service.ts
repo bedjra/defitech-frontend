@@ -14,7 +14,9 @@ export class EtudiantService {
   private apiAddUrl = 'http://localhost:8060/api/comptable/ajout_etudiant';
   private apiAllfilUrl = 'http://localhost:8060/api/comptable/filiere';
   private baseUrl = 'http://localhost:8060/api/comptable/ajout_paiement';
-
+  private apiModUrl = 'http://localhost:8060/api/comptable/update_etudiant';
+  private baseFilUrl = 'http://localhost:8060/api/comptable';
+ 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -41,10 +43,10 @@ export class EtudiantService {
   }
 
   // Mettre à jour un étudiant existant
-  updateEtudiant(id: string, etudiant: Etudiant): Observable<Etudiant> {
-    return this.http.put<Etudiant>(`${this.apiUrl}/update_etudiant/${id}`, etudiant);
+ updateEtudiant(matricule: string, etudiant: Etudiant): Observable<Etudiant> {
+    const url = `${this.apiUrl}/${matricule}`;
+    return this.http.put<Etudiant>(url, etudiant);
   }
-
   // Supprimer un étudiant par ID
   deleteEtudiant(matricule: string): Observable<void> {
     return this.http.delete<void>(`http://localhost:8060/api/comptable/etudiant/${matricule}`);
@@ -59,7 +61,10 @@ export class EtudiantService {
   getEtudiantById(id: number): Observable<Etudiant> {
     return this.http.get<Etudiant>(`${this.apiUrl}/etudiant/${id}`);
   }
-
+  getEtudiantByMatricule(matricule: string) {
+    return this.http.get<Etudiant>(`http://localhost:8060/api/comptable/etudiant/${matricule}`);
+  }
+  
   // Rechercher des étudiants par parcours et niveau
   searchEtudiants(parcoursNom: string, niveau: string): Observable<Etudiant[]> {
     let params = new HttpParams()
@@ -100,6 +105,14 @@ export class EtudiantService {
   addPaiement(paiement: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, paiement);
   }
+  searchByFiliere(parcoursId: number, nomFiliere: string, niveauEtude: string): Observable<any> {
+    const url = `${this.baseFilUrl}/searchbyfiliere?parcoursId=${parcoursId}&nomFiliere=${nomFiliere}&niveauEtude=${niveauEtude}`;
+    return this.http.get(url);
+  }
 
+  //////    impression   /////////////
+  getEtudiantsByFiliereAndNiveau(nomFiliere: string, niveauEtude: string): Observable<Etudiant[]> {
+    return this.http.get<Etudiant[]>(`${this.baseUrl}/filiere/${nomFiliere}/niveau/${niveauEtude}`);
+  }
   
 }

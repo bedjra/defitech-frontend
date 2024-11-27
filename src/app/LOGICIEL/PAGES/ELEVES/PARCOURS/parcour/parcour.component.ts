@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ParcourService } from '../../../../SERVICES/parcour.service';
 import { CommonModule } from '@angular/common';
+import { Paiement } from '../../../../MODELS/paiement';
+import { EcheanceService } from '../../../../SERVICES/echeance.service';
 
 @Component({
   selector: 'app-parcour',
@@ -12,10 +14,25 @@ import { CommonModule } from '@angular/common';
 })
 export class ParcourComponent implements OnInit {
   stats: any[] = [];
-  constructor(private parcourService: ParcourService) {}
+  rappels: Paiement[] = [];
+loading = true;
+error: string | null = null;
+nombreRappels: number = 0; 
+  constructor(private parcourService: ParcourService,
+    private echeanceService: EcheanceService
+  ) {}
 
   ngOnInit(): void {
     this.loadStats();
+    
+this.echeanceService.getNombreRappelsAVenir().subscribe(
+  (nombre: number) => {
+    this.nombreRappels = nombre; // Stocker le nombre dans la variable
+  },
+  (err) => {
+    console.error('Erreur lors de la récupération du nombre de rappels.', err);
+  }
+);
   }
 
   loadStats(): void {
@@ -24,3 +41,7 @@ export class ParcourComponent implements OnInit {
     });
   }
 }
+
+
+
+

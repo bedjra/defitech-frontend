@@ -5,6 +5,14 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { EtudiantService } from '../../../../../SERVICES/etudiant.service';
+import { Etudiant } from '../../../../../MODELS/etudiant';
+import { HttpClient } from '@angular/common/http';
+import { Filiere } from '../../../../../MODELS/filiers';
+import { FiliersService } from '../../../../../SERVICES/filiers.service';
+import { DataSharingServiceService } from '../../../../../SERVICES/data-sharing-service.service';
+import { Paiement } from '../../../../../MODELS/paiement';
+import { EcheanceService } from '../../../../../SERVICES/echeance.service';
+import { Paie } from '../../../../../MODELS/paie';
 @Component({
   selector: 'app-l3',
   standalone: true,
@@ -16,20 +24,57 @@ import { EtudiantService } from '../../../../../SERVICES/etudiant.service';
   styleUrl: './l3.component.css'
 })
 export class L3Component implements OnInit {
+  etudiants: any[] = [];
   selectedEtudiant: any = null;
   nom: string = '';
   prenom: string = '';
   boutonImpressionVisible: boolean = false;
-  etudiants: any[] = [];
+  filiereList: Filiere[] = []; // Liste des filières
+  selectedFiliere: string = '';
+  rappels: Paie[] = [];
+  loading = true;
+  error: string | null = null;
+  nombreRappels: number = 0; // Variable pour stocker le nombre de paiements
+
+  // Valeurs statiques
+  readonly parcoursId: number = 1; // Parcours ID fixe
+  readonly niveauEtude: string = 'TROISIEME_ANNEE'; // Niveau d'étude fixe
+
 
   constructor(
+    private echeanceService: EcheanceService,
     private modalService: NgbModal,
     private etudiantService: EtudiantService,
-    private router: Router
+    private router: Router,
+    private filiersService: FiliersService,
+    private dataSharingServiceService: DataSharingServiceService,
+
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
     this.getEtudiants();
+    this.loadFiliereList();
+    this.echeanceService.getRappelsAVenir().subscribe(
+      (data: Paie[]) => {
+        this.rappels = data;
+        this.loading = false;
+      },
+      (err) => {
+        this.error = 'Erreur lors du chargement des rappels.';
+        this.loading = false;
+      }
+    );
+  
+
+  this.echeanceService.getNombreRappelsAVenir().subscribe(
+    (nombre: number) => {
+      this.nombreRappels = nombre; // Stocker le nombre dans la variable
+    },
+    (err) => {
+      console.error('Erreur lors de la récupération du nombre de rappels.', err);
+    }
+  );
   }
 
   // Méthode pour récupérer les étudiants
@@ -38,12 +83,15 @@ export class L3Component implements OnInit {
       .subscribe(
         data => {
           this.etudiants = data;
+          this.dataSharingServiceService.updateEtudiants(this.etudiants); // Met à jour le service
+
         },
         error => {
           console.error('Erreur lors de la récupération des étudiants', error);
         }
       );
   }
+   
   // Méthode pour supprimer un étudiant
   deleteEtudiant(matricule: string): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')) {
@@ -73,11 +121,7 @@ export class L3Component implements OnInit {
     });
   }
 
-  // Impression
-  printListe(): void {
-    window.print();
-    this.boutonImpressionVisible = true; // Vous pouvez retirer cette ligne si ce n'est pas nécessaire
-  }
+
 
   // Fermer le modal
   closeModal(): void {
@@ -88,41 +132,47 @@ export class L3Component implements OnInit {
     this.selectedEtudiant = null;
   }
 
-  // Méthode pour rediriger vers la page d'inscription avec les données de l'étudiant
-  editEtudiant(etudiant: any) {
-    this.router.navigate(['/inscrire-étudiant'], { queryParams: { 
-      etudiantNom: etudiant.etudiantNom,
-      etudiantPrenom: etudiant.etudiantPrenom,
-      etudiantAdresse: etudiant.etudiantAdresse,
-      etudiantTelephone: etudiant.etudiantTelephone,
-      etudiantMail: etudiant.etudiantMail,
-      etudiantDateNaiss: etudiant.etudiantDateNaiss,
-      etudiantLieuNais: etudiant.etudiantLieuNais,
-      etudiantNationnalite: etudiant.etudiantNationnalite,
-      etudiantSexe: etudiant.etudiantSexe,
-      etudiantSerieBac: etudiant.etudiantSerieBac,
-      etudiantAnneeBac: etudiant.etudiantAnneeBac,
-      etudiantPaysBac: etudiant.etudiantPaysBac,
-      etudiantEtatProvenance: etudiant.etudiantEtatProvenance,
-      etudiantAutreDiplome: etudiant.etudiantAutreDiplome,
-      etudiantDateIns: etudiant.etudiantDateIns,
-      mentionBac: etudiant.mentionBac,
-      boursier: etudiant.boursier,
-      parcoursId: etudiant.parcoursId,
-      nomFiliere: etudiant.nomFiliere,
-      niveauEtude: etudiant.niveauEtude,
-      typeModalite: etudiant.typeModalite,
-      tuteurNom: etudiant.tuteurNom,
-      tuteurPrenom: etudiant.tuteurPrenom,
-      tuteurProfession: etudiant.tuteurProfession,
-      tuteurOrganismeEmployeur: etudiant.tuteurOrganismeEmployeur,
-      tuteurAdresse: etudiant.tuteurAdresse,
-      tuteurTelBureau: etudiant.tuteurTelBureau,
-      tuteurTelDom: etudiant.tuteurTelDom,
-      tuteurCel: etudiant.tuteurCel,
-      tuteurEmail: etudiant.tuteurEmail
-    }});
+  // Méthode pour rediriger vers la page d'edition avec les données de l'étudiant
+  editEtudiant(matricule: string) {
+    this.router.navigate(['/modifier-étudiant', matricule]);
+  }
+
+  loadFiliereList(): void {
+    this.filiersService.getFilieresByParcours(this.parcoursId).subscribe((filieres) => {
+      this.filiereList = filieres;
+    });
+  }
+
+ // Charger les étudiants selon la filière sélectionnée
+ loadEtudiants(): void {
+  if (this.selectedFiliere) {
+    this.filiersService.getEtudiantsByFiliereAndNiveau(this.selectedFiliere, this.niveauEtude)
+      .subscribe((etudiants) => {
+        this.etudiants = etudiants;
+        this.dataSharingServiceService.updateEtudiants(this.etudiants); 
+      });
   }
 }
 
+
+  // Impression
+  redirectToDefitech(): void {
+    if (this.selectedFiliere && this.niveauEtude) {
+      this.router.navigate(['/defitech'], {
+        queryParams: {
+          filiere: this.selectedFiliere,
+          niveau: this.niveauEtude
+        }
+      }).then(() => {
+        setTimeout(() => {
+          window.print();
+        }, 300);
+      });
+    } else {
+      alert('Veuillez sélectionner une filière.');
+    }
+  }
+  
+
+}
 

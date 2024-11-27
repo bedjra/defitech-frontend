@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PmtDetComponent } from './pmt-det.component';
+import { FicheComponent } from './fiche.component';
 
-describe('PmtDetComponent', () => {
-  let component: PmtDetComponent;
-  let fixture: ComponentFixture<PmtDetComponent>;
+describe('FicheComponent', () => {
+  let component: FicheComponent;
+  let fixture: ComponentFixture<FicheComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PmtDetComponent]
+      imports: [FicheComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PmtDetComponent);
+    fixture = TestBed.createComponent(FicheComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
